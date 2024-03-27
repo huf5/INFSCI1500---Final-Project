@@ -14,5 +14,11 @@ CREATE TABLE camper(
     testing6 DATETIME NOT NULL
 )ENGINE INNODB;
 
+DROP TABLE IF EXISTS cabin;
+CREATE TABLE cabin(
+	cabin_id INT PRIMARY KEY NOT NULL
+    )ENGINE INNODB;
+    
+SELECT * FROM cabin;
 SELECT * FROM camper;
 SELECT * FROM testing;
