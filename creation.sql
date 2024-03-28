@@ -6,7 +6,7 @@ CREATE TABLE staff(
     last_name VARCHAR(50) NOT NULL, 
     first_name VARCHAR(50) NOT NULL,
     position_name VARCHAR(100) NOT NULL,
-    staff_phone_number INT NOT NULL, 
+    staff_phone_number VARCHAR(50), 
     staff_email VARCHAR(100) NOT NULL,
     staff_emergency_contact VARCHAR(500),
     staff_allergies VARCHAR(100),
