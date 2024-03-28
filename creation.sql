@@ -17,13 +17,11 @@ CREATE TABLE staff(
 DROP TABLE IF EXISTS transactions;
 CREATE TABLE transactions(
 	transaction_id INT PRIMARY KEY,
-    FOREIGN KEY(camper_id) REFERENCES campers(camper_id),
-    FOREIGN KEY(session_id) REFERENCES sessions(session_id),
     transaction_type VARCHAR(20),
     amount INT,
     transaction_date DATETIME,
-	payment_type VARCHAR(20),
-
+	payment_type VARCHAR(20)
 )ENGINE INNODB;
 
 SELECT * FROM staff;
+SELECT * FROM transactions;
