@@ -1,24 +1,29 @@
 USE group_camp_query;
 
-DROP TABLE IF EXISTS testing; 
-CREATE TABLE testing(
-	testing1 INT PRIMARY KEY NOT NULL, 
-    testing2 VARCHAR(200) NOT NULL,
-    testing3 DATETIME NOT NULL
+DROP TABLE IF EXISTS staff;
+CREATE TABLE staff(
+	staff_id INT PRIMARY KEY NOT NULL,
+    last_name VARCHAR(50) NOT NULL, 
+    first_name VARCHAR(50) NOT NULL,
+    position_name VARCHAR(100) NOT NULL,
+    staff_phone_number INT NOT NULL, 
+    staff_email VARCHAR(100) NOT NULL,
+    staff_emergency_contact VARCHAR(500),
+    staff_allergies VARCHAR(100),
+    staff_dietary_restrictions VARCHAR(100),
+    cpr_certification VARCHAR(1)
 )ENGINE INNODB;
 
-DROP TABLE IF EXISTS camper;
-CREATE TABLE camper(
-	testing4 INT PRIMARY KEY NOT NULL, 
-    testing5 VARCHAR(200) NOT NULL,
-    testing6 DATETIME NOT NULL
+DROP TABLE IF EXISTS transactions;
+CREATE TABLE transactions(
+	transaction_id INT PRIMARY KEY,
+    FOREIGN KEY(camper_id) REFERENCES campers(camper_id),
+    FOREIGN KEY(session_id) REFERENCES sessions(session_id),
+    transaction_type VARCHAR(20),
+    amount INT,
+    transaction_date DATETIME,
+	payment_type VARCHAR(20),
+
 )ENGINE INNODB;
 
-DROP TABLE IF EXISTS cabin;
-CREATE TABLE cabin(
-	cabin_id INT PRIMARY KEY NOT NULL
-    )ENGINE INNODB;
-    
-SELECT * FROM cabin;
-SELECT * FROM camper;
-SELECT * FROM testing;
+SELECT * FROM staff;
