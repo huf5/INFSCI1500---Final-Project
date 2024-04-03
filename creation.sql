@@ -48,8 +48,37 @@ CREATE TABLE guardians(
     email VARCHAR(50) NOT NULL
 )ENGINE INNODB;
 
+DROP TABLE IF EXISTS cabins;
+CREATE TABLE cabins(
+	cabin_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    cabin_name VARCHAR(50) NOT NULL,
+    capacity INT NOT NULL
+)ENGINE INNODB;
+
+DROP TABLE IF EXISTS camper_groups;
+CREATE TABLE camper_groups(
+	group_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    group_name VARCHAR(50)
+)ENGINE INNODB;
+
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions(
+	session_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    theme VARCHAR(50) NOT NULL,
+    enrollment_capacity INT NOT NULL,
+    registration_deadline DATE NOT NULL,
+    session_status VARCHAR(50) NOT NULL,
+    session_fee INT NOT NULL    
+)ENGINE INNODB;
+
 SELECT * FROM staff;
 SELECT * FROM transactions;
 
 SELECT * FROM campers;
 SELECT * FROM guardians;
+
+SELECT * FROM cabins;
+SELECT * FROM camper_groups;
+SELECT * FROM sessions;

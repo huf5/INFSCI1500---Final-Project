@@ -1,5 +1,6 @@
 USE group_camp_query;
 
+#Inserting into staff
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
 	VALUES (17263, 'Adams', 'James', 'Counselor', '(254) 644-6473' , 'jaddams5@gmail.com', 'Jeremy Adams (254) 644-6179', NULL, NULL, 'Y');
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
@@ -27,4 +28,33 @@ INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_n
     
 SELECT * FROM staff;
 
+#Insert into Cabins
+INSERT INTO cabins (cabin_name, capacity)
+	VALUES ('Apple', 8);
+INSERT INTO cabins (cabin_name, capacity)
+	VALUES ('Ash', 9);
+INSERT INTO cabins (cabin_name, capacity)
+	VALUES ('Birch', 10);
 
+SELECT * FROM cabins;
+
+#Insert into Camper Groups
+INSERT INTO camper_groups (group_name)
+	VALUES ('Red');
+INSERT INTO camper_groups (group_name)
+	VALUES ('Green');
+INSERT INTO camper_groups (group_name)
+	VALUES ('Blue');
+
+SELECT * FROM camper_groups;
+
+#Insert into Sessions
+INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
+	VALUES ('2024-06-02', '2024-06-08', 'Elementary', 18, '2024-05-15', 'OPEN', 225.00);
+INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
+	VALUES ('2024-06-02', '2024-06-12', 'Middle School Extended', 16, '2024-05-15', 'OPEN', 430.00);
+INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
+	VALUES ('2024-06-09', '2024-06-15', 'Performing Arts', 18, '2024-05-20', 'OPEN', 300.00);
+
+SELECT * FROM sessions;
+    
