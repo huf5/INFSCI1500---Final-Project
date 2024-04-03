@@ -23,5 +23,33 @@ CREATE TABLE transactions(
 	payment_type VARCHAR(20)
 )ENGINE INNODB;
 
+DROP TABLE IF EXISTS campers;
+CREATE TABLE campers(
+	camper_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    gender VARCHAR(1) NOT NULL,
+    DOB DATETIME NOT NULL,
+    home_address VARCHAR(100) NOT NULL,
+    emergency_contact VARCHAR(15) NOT NULL,
+    allergies VARCHAR(200) NOT NULL,
+    special_needs VARCHAR(200) NOT NULL,
+    dietary_restrictions VARCHAR(200) NOT NULL
+) ENGINE INNODB;
+
+DROP TABLE IF EXISTS guardians;
+CREATE TABLE guardians(
+	guardian_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    relationship_to_camper VARCHAR(50) NOT NULL,
+    home_address VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(15) NOT NULL,
+    email VARCHAR(50) NOT NULL
+)ENGINE INNODB;
+
 SELECT * FROM staff;
 SELECT * FROM transactions;
+
+SELECT * FROM campers;
+SELECT * FROM guardians;
