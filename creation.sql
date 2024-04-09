@@ -15,7 +15,7 @@ CREATE TABLE staff(
     cpr_certification VARCHAR(1)
 )ENGINE INNODB;
 
--- Crezte transactions table
+-- Create transactions table
 DROP TABLE IF EXISTS transactions;
 CREATE TABLE transactions(
 	transaction_id INT PRIMARY KEY,
@@ -24,24 +24,19 @@ CREATE TABLE transactions(
     transaction_date DATETIME,
 	payment_type VARCHAR(20), 
     trans_camper INT NOT NULL, 
-    trans_session INT NOT NULL
+    trans_session INT NOT NULL, 
+    CONSTRAINT fk_trans_camper
+    FOREIGN KEY (trans_camper)
+    REFERENCES campers (camper_id), 
+    CONSTRAINT fk_trans_session
+    FOREIGN KEY (trans_session)
+    REFERENCES sessions (session_id)
 )ENGINE INNODB;
 
 -- Alter transactions to includes foreign keys and drop if created
-ALTER TABLE transactions
-	ADD CONSTRAINT fk_trans_camper
-    FOREIGN KEY (trans_camper)
-    REFERENCES campers (camper_id);
-  
-ALTER TABLE transactions
-	ADD CONSTRAINT fk_trans_session
-    FOREIGN KEY (trans_session)
-    REFERENCES sessions (session_id);
+-- ALTER TABLE transactions DROP FOREIGN KEY fk_trans_camper;
+-- ALTER TABLE transactions DROP FOREIGN KEY fk_trans_session;
     
-ALTER TABLE transactions DROP FOREIGN KEY fk_trans_camper;
-ALTER TABLE transactions DROP FOREIGN KEY fk_trans_session;
-    
-
 
 
 -- Create campers table
@@ -130,7 +125,7 @@ ALTER TABLE camper_groups DROP FOREIGN KEY fk_cg_cabin;
 ALTER TABLE camper_groups DROP FOREIGN KEY fk_cg_staff;
 
 
--- create sessions table adn alter tale to add fk and drop it
+-- create sessions table and add fk
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions(
 	session_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -141,16 +136,13 @@ CREATE TABLE sessions(
     registration_deadline DATE NOT NULL,
     session_status VARCHAR(50) NOT NULL,
     session_fee INT NOT NULL, 
-    s_group INT
+    s_group INT,
+    CONSTRAINT fk_session_gid
+    FOREIGN KEY (s_group)
+    REFERENCES camper_groups (group_id)
 )ENGINE INNODB;
 
-ALTER TABLE sessions
-	ADD CONSTRAINT fk_session_gid
-    FOREIGN KEY (s_group)
-    REFERENCES camper_groups (group_id); 
-    
 ALTER TABLE sessions DROP FOREIGN KEY fk_session_gid;
-
 
 -- create transportation table
 DROP TABLE IF EXISTS transportation;
