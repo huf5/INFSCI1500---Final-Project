@@ -1,5 +1,6 @@
 USE group_camp_query;
 
+SET FOREIGN_KEY_CHECKS=0;
 -- Create staff table
 DROP TABLE IF EXISTS staff;
 CREATE TABLE staff(
@@ -14,30 +15,6 @@ CREATE TABLE staff(
     staff_dietary_restrictions VARCHAR(100),
     cpr_certification VARCHAR(1)
 )ENGINE INNODB;
-
--- Create transactions table
-DROP TABLE IF EXISTS transactions;
-CREATE TABLE transactions(
-	transaction_id INT PRIMARY KEY,
-    transaction_type VARCHAR(20),
-    amount INT,
-    transaction_date DATETIME,
-	payment_type VARCHAR(20), 
-    trans_camper INT NOT NULL, 
-    trans_session INT NOT NULL, 
-    CONSTRAINT fk_trans_camper
-    FOREIGN KEY (trans_camper)
-    REFERENCES campers (camper_id), 
-    CONSTRAINT fk_trans_session
-    FOREIGN KEY (trans_session)
-    REFERENCES sessions (session_id)
-)ENGINE INNODB;
-
--- Alter transactions to includes foreign keys and drop if created
--- ALTER TABLE transactions DROP FOREIGN KEY fk_trans_camper;
--- ALTER TABLE transactions DROP FOREIGN KEY fk_trans_session;
-    
-
 
 -- Create campers table
 DROP TABLE IF EXISTS campers;
@@ -56,22 +33,17 @@ CREATE TABLE campers(
     group_assignment INT NOT NULL
 ) ENGINE INNODB;
 
--- ALTER campers table to add guardian fk and drop if exists
-ALTER TABLE campers
-	ADD CONSTRAINT fk_guardian
-    FOREIGN KEY (guardian)
-    REFERENCES guardians (guardian_id);
-  
-ALTER TABLE campers
-	ADD CONSTRAINT fk_group_assignment
-    FOREIGN KEY (group_assignment)
-    REFERENCES camper_groups (group_id);
-    
-ALTER TABLE campers DROP FOREIGN KEY fk_group_assignment;
-ALTER TABLE campers DROP FOREIGN KEY fk_guardian;
-
-    
-    
+-- Create transactions table
+DROP TABLE IF EXISTS transactions;
+CREATE TABLE transactions(
+	transaction_id INT PRIMARY KEY,
+    transaction_type VARCHAR(20),
+    amount INT,
+    transaction_date DATETIME,
+	payment_type VARCHAR(20), 
+    trans_camper INT NOT NULL, 
+    trans_session INT NOT NULL
+)ENGINE INNODB;
 
 -- Create guradians table
 DROP TABLE IF EXISTS guardians;
@@ -91,18 +63,10 @@ CREATE TABLE cabins(
 	cabin_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     cabin_name VARCHAR(50) NOT NULL,
     capacity INT NOT NULL,
-    group_id INT
+    cab_group_id INT
 )ENGINE INNODB;
 
--- ALTER cabins table to add fk and drop if made already. 
-ALTER TABLE cabins 
-	ADD CONSTRAINT fk_groups
-    FOREIGN KEY (group_id)
-    REFERENCES camper_groups(group_id); 
-
-ALTER TABLE cabins DROP FOREIGN KEY fk_groups;
-
--- Create camper_groups table adn alter table to add fk and drop the fk
+-- Create camper_groups
 DROP TABLE IF EXISTS camper_groups;
 CREATE TABLE camper_groups(
 	group_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -111,21 +75,7 @@ CREATE TABLE camper_groups(
     cg_staff INT NOT NULL
 )ENGINE INNODB;
 
-ALTER TABLE camper_groups 
-	ADD CONSTRAINT fk_cg_cabin
-    FOREIGN KEY (cg_cabin)
-    REFERENCES cabins (cabin_id);
-
-ALTER TABLE camper_groups 
-	ADD CONSTRAINT fk_cg_staff
-    FOREIGN KEY (cg_staff)
-    REFERENCES staff (staff_id);
-    
-ALTER TABLE camper_groups DROP FOREIGN KEY fk_cg_cabin;
-ALTER TABLE camper_groups DROP FOREIGN KEY fk_cg_staff;
-
-
--- create sessions table and add fk
+-- create sessions table
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions(
 	session_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -136,13 +86,8 @@ CREATE TABLE sessions(
     registration_deadline DATE NOT NULL,
     session_status VARCHAR(50) NOT NULL,
     session_fee INT NOT NULL, 
-    s_group INT,
-    CONSTRAINT fk_session_gid
-    FOREIGN KEY (s_group)
-    REFERENCES camper_groups (group_id)
+    s_group INT
 )ENGINE INNODB;
-
-ALTER TABLE sessions DROP FOREIGN KEY fk_session_gid;
 
 -- create transportation table
 DROP TABLE IF EXISTS transportation;
@@ -153,18 +98,7 @@ CREATE TABLE transportation(
     capacity INT NOT NULL,
     wheelchair_accesssible VARCHAR(1) NOT NULL,
     driver INT NOT NULL
-    -- FOREIGN KEY (driver) REFERENCES staff(staff_id) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE INNODB;
-
-
--- ALTER transportation table to add fk and drop if made already. 
-ALTER TABLE transportation
-	ADD CONSTRAINT fk_driver
-	FOREIGN KEY (driver)
-	REFERENCES staff(staff_id);
-    
-ALTER TABLE transportation DROP FOREIGN KEY fk_driver;
-
 
 -- Create supplies table and add fk and drop it
 DROP TABLE IF EXISTS supplies; 
@@ -178,6 +112,64 @@ CREATE TABLE supplies(
     delivery_date DATETIME NOT NULL
 )ENGINE INNODB;
 
+
+SET FOREIGN_KEY_CHECKS=1;
+-- ALTER campers table to add guardian fk and drop if exists
+ALTER TABLE campers
+	ADD CONSTRAINT fk_guardian
+    FOREIGN KEY (guardian)
+    REFERENCES guardians (guardian_id);
+ALTER TABLE campers
+	ADD CONSTRAINT fk_group_assignment
+    FOREIGN KEY (group_assignment)
+    REFERENCES camper_groups (group_id);
+ALTER TABLE campers DROP CONSTRAINT fk_guardian;
+ALTER TABLE campers DROP CONSTRAINT fk_group_assignment;
+
+-- Alter transactions to includes foreign keys and drop if created
+ALTER TABLE transactions 
+	ADD CONSTRAINT fk_trans_camper
+    FOREIGN KEY (trans_camper)
+    REFERENCES campers (camper_id);
+ALTER TABLE transactions
+	ADD CONSTRAINT fk_trans_session
+    FOREIGN KEY (trans_session)
+    REFERENCES sessions (session_id);
+ALTER TABLE transactions DROP CONSTRAINT fk_trans_camper;
+ALTER TABLE transactions DROP CONSTRAINT fk_trans_session;
+
+-- ALTER cabins table to add fk and drop if made already. 
+ALTER TABLE cabins 
+	ADD CONSTRAINT fk_c_groups
+    FOREIGN KEY (cab_group_id)
+    REFERENCES camper_groups(group_id); 
+ALTER TABLE cabins DROP CONSTRAINT fk_c_groups;
+
+-- Alter camper_groups
+ALTER TABLE camper_groups 
+	ADD CONSTRAINT fk_cg_cabin
+    FOREIGN KEY (cg_cabin)
+    REFERENCES cabins (cabin_id);
+ALTER TABLE camper_groups 
+	ADD CONSTRAINT fk_cg_staff
+    FOREIGN KEY (cg_staff)
+    REFERENCES staff (staff_id);
+ALTER TABLE camper_groups DROP CONSTRAINT fk_cg_cabin;
+ALTER TABLE camper_groups DROP CONSTRAINT fk_cg_staff;
+
+-- Alter sessions
+ALTER TABLE sessions
+	ADD CONSTRAINT fk_session_gid
+    FOREIGN KEY (s_group)
+    REFERENCES camper_groups (group_id);
+ALTER TABLE sessions DROP CONSTRAINT fk_session_gid;
+
+-- ALTER transportation
+ALTER TABLE transportation
+	ADD CONSTRAINT fk_driver
+	FOREIGN KEY (driver)
+	REFERENCES staff(staff_id);
+ALTER TABLE transportation DROP CONSTRAINT fk_driver;
 
 #Insert data into staff table
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
@@ -331,6 +323,7 @@ INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_
 	VALUES("Baseball Kit", 20, "Dick's Sporting Goods", 35.89, "2022-04-13", "2011-08-09");
 INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
 	VALUES("Storage Shed", 1, "Home Depot", 5175.99, "2010-09-22", "2010-10-03");
+    
 
 -- Show the tables
 SELECT * FROM staff;
