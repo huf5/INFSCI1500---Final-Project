@@ -1,5 +1,4 @@
 USE group_camp_query;
-USE huf5;
 
 SET FOREIGN_KEY_CHECKS=0;
 -- Create staff table
