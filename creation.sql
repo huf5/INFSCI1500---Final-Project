@@ -112,6 +112,39 @@ CREATE TABLE supplies(
     delivery_date DATETIME NOT NULL
 )ENGINE INNODB;
 
+-- Create activities table
+DROP TABLE IF EXISTS activites;
+CREATE TABLE activities (
+    activity_id INT AUTO_INCREMENT PRIMARY KEY,
+    activity_name VARCHAR(100) NOT NULL,
+    age_group VARCHAR(50) NOT NULL,
+    activity_desc TEXT,
+    start_time DATETIME,
+    end_time DATETIME,
+    location VARCHAR(100),
+    instructor VARCHAR(100),
+    capacity INT,
+    CONSTRAINT chk_capacity CHECK (capacity > 0)
+) ENGINE INNODB;
+
+
+-- Create health records table 
+DROP TABLE IF EXISTS health_records;
+CREATE TABLE health_records (
+    record_id INT AUTO_INCREMENT PRIMARY KEY,
+    camper_id INT NOT NULL,
+    height DECIMAL(5,2),
+    weight DECIMAL(5,2),
+    blood_type VARCHAR(5),
+    allergies TEXT,
+    medications TEXT,
+    medical_conditions TEXT,
+    emergency_contact_name VARCHAR(100),
+    emergency_contact_number VARCHAR(20),
+    doctor_name VARCHAR(100),
+    doctor_contact_number VARCHAR(20)
+) ENGINE INNODB;
+
 
 SET FOREIGN_KEY_CHECKS=1;
 -- ALTER campers table to add guardian fk and drop if exists
