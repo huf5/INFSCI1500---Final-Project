@@ -40,7 +40,7 @@ CREATE TABLE campers (
     allergies VARCHAR(200) NOT NULL,
     special_needs VARCHAR(200) NOT NULL,
     dietary_restrictions VARCHAR(200) NOT NULL,
-    guardian INT NOT NULL, 
+    guardian INT, -- NOT NULL, 
     group_assignment INT NOT NULL
 ) ENGINE INNODB;
 
@@ -155,8 +155,6 @@ ALTER TABLE campers
     ADD CONSTRAINT fk_guardian
     FOREIGN KEY (guardian)
     REFERENCES guardians (guardian_id);
-
--- Alter campers table to add group_assignment fk
 ALTER TABLE campers
     ADD CONSTRAINT fk_group_assignment
     FOREIGN KEY (group_assignment)
@@ -312,8 +310,30 @@ INSERT INTO cabins (cabin_name, capacity)
 	VALUES ('Ginko', 20);
 INSERT INTO cabins (cabin_name, capacity)
 	VALUES ('Spruce', 10);
-    
-    
+
+
+#Insert into campers
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+VALUES ('Rita', 'Johnson', 'F', '2008-05-15', '123 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 1);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('James', 'Smith', 'M', '2007-09-20', '456 Elm Avenue, Springtown, USA', '1986264783', 'Peanuts', 'None', 'None', 9);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('Tyler', 'Brown', 'F', '2009-03-10', '789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('Jamie', 'Williams', 'M', '2007-07-02', '101 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 7);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('Poet', 'Davis', 'M', '2009-12-18', '234 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 2);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('Wrook', 'Martinez', 'M', '2008-08-30', '67 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 10);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('AJ', 'Taylor', 'M', '2007-06-25', '12890 Willow Way, Brookside, USA', '8594728375', 'None', 'None', 'None', 1);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('Jackson', 'Rodriguez', 'M', '2010-01-05', '2 Ash Street, Sunnyside, USA', '6471927483', 'None', 'None', 'None', 2);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */  group_assignment)
+	VALUES ('Logan', 'Anderson', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+	VALUES ('Peyton', 'Jones', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8);
+
 #Insert data into Camper Groups table
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
 	VALUES ('Red', 1, 17263);
@@ -335,6 +355,29 @@ INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
 	VALUES ('Purple', 9, 90146);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
 	VALUES ('Brown', 10, 33456);
+
+
+#Insert into guardians
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Johnson", "Emily", NULL, "Mother", "123 Maple Street, Pleasantville, USA", "1827463758", "ejohn12@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Smith", "Alexander", NULL, "Brother", "456 Elm Avenue, Springtown, USA", "1986264783", "stardude92@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Brown", "Jessica", NULL, "Mother", "789 Oak Drive, Lakeside, USA", "2123456109", "swfity77@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Williams", "Matthew", NULL, "Father", "101 Pine Lane, Meadowbrook, USA", "7463889946", "matt.williams92@yahoo.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Davis", "John", NULL, "Father", "234 Cedar Court, Riverside, USA", "0927364885", "jd.adams@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Martinez", "Travis", NULL, "Father", "67 Birch Road, Hillside, USA", "6473829003", "travdawg@hotmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Taylor", "Sammy", NULL, "Father", "12890 Willow Way, Brookside, USA", "8594728375", "samantha.taylor99@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Rodriguez", "Joseph", NULL, "Guardian", "2 Ash Street, Sunnyside, USA", "6471927483", "hotrod@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Anderson", "Grace", NULL, "Aunt", "1295 Sycamore Place, Forest Hills, USA", "1928463726", "grace.anderson66@gmail.com");
+INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
+	VALUES ("Jones", "Isabella", NULL, "Mother", "5784 Magnolia Terrace, Mountain View, USA", "1746372893", "jlicious3@gmail.com");
 
     
 #Insert data into into the sessions table
