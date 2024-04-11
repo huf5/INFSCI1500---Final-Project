@@ -12,10 +12,9 @@ CREATE TABLE activities (
     start_time TIME,
     end_time TIME,
     location VARCHAR(100),
-	-- instructor INT,
-    capacity INT,
-    activity_equipment INT,
-    activity_session INT
+	activity_instructor INT,
+    capacity INT, 
+    CONSTRAINT fk_instructor FOREIGN KEY (activity_instructor) REFERENCES staff(staff_id)
 ) ENGINE INNODB;
 
 -- Create cabins table
@@ -24,7 +23,8 @@ CREATE TABLE cabins (
     cabin_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     cabin_name VARCHAR(50) NOT NULL,
     capacity INT NOT NULL,
-    cab_group_id INT
+    cab_group_id INT, 
+    CONSTRAINT fk_c_groups FOREIGN KEY (cab_group_id) REFERENCES camper_groups(group_id)
 ) ENGINE INNODB;
 
 -- Create campers table
@@ -40,8 +40,8 @@ CREATE TABLE campers (
     allergies VARCHAR(200) NOT NULL,
     special_needs VARCHAR(200) NOT NULL,
     dietary_restrictions VARCHAR(200) NOT NULL,
-    guardian INT, -- NOT NULL, 
-    group_assignment INT NOT NULL
+    group_assignment INT NOT NULL, 
+    CONSTRAINT fk_group_assignment FOREIGN KEY (group_assignment) REFERENCES camper_groups (group_id)
 ) ENGINE INNODB;
 
 -- Create camper_groups table
@@ -50,7 +50,9 @@ CREATE TABLE camper_groups (
     group_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     group_name VARCHAR(50), 
     cg_cabin INT NOT NULL, 
-    cg_staff INT NOT NULL
+    cg_staff INT NOT NULL, 
+    CONSTRAINT fk_cg_cabin FOREIGN KEY (cg_cabin) REFERENCES cabins (cabin_id), 
+    CONSTRAINT fk_cg_staff FOREIGN KEY (cg_staff) REFERENCES staff (staff_id)
 ) ENGINE INNODB;
 
 -- Create guardians table
@@ -59,8 +61,8 @@ CREATE TABLE guardians (
     guardian_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    camper INT, 
-    relationship_to_camper VARCHAR(50) NOT NULL,
+    -- camper INT, 
+    -- relationship_to_camper VARCHAR(50) NOT NULL,
     home_address VARCHAR(100) NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     email VARCHAR(50) NOT NULL
@@ -80,7 +82,8 @@ CREATE TABLE health_records (
     emergency_contact_name VARCHAR(100),
     emergency_contact_number VARCHAR(20),
     doctor_name VARCHAR(100),
-    doctor_contact_number VARCHAR(20)
+    doctor_contact_number VARCHAR(20), 
+    CONSTRAINT fk_hr_camper_id FOREIGN KEY (camper_id) REFERENCES campers(camper_id)
 ) ENGINE INNODB;
 
 -- Create sessions table
@@ -94,7 +97,8 @@ CREATE TABLE sessions (
     registration_deadline DATE NOT NULL,
     session_status VARCHAR(50) NOT NULL,
     session_fee INT NOT NULL, 
-    s_group INT
+    s_group INT, 
+    CONSTRAINT fk_session_gid FOREIGN KEY (s_group) REFERENCES camper_groups (group_id) 
 ) ENGINE INNODB;
 
 -- Create staff table
@@ -121,8 +125,8 @@ CREATE TABLE supplies (
     supplier VARCHAR(100) NOT NULL, 
     cost INT NOT NULL, 
     order_date DATETIME NOT NULL, 
-    delivery_date DATETIME NOT NULL, 
-    activity_id INT
+    delivery_date DATETIME NOT NULL
+    -- activity_id INT
 ) ENGINE INNODB;
 
 -- Create transactions table
@@ -134,7 +138,9 @@ CREATE TABLE transactions (
     transaction_date DATETIME,
     payment_type VARCHAR(20), 
     trans_camper INT NOT NULL, 
-    trans_session INT NOT NULL
+    trans_session INT NOT NULL, 
+    CONSTRAINT fk_trans_camper FOREIGN KEY (trans_camper) REFERENCES campers (camper_id), 
+    CONSTRAINT fk_trans_session FOREIGN KEY (trans_session) REFERENCES sessions (session_id)
 ) ENGINE INNODB;
 
 -- Create transportation table
@@ -145,117 +151,100 @@ CREATE TABLE transportation (
     vehicle_type VARCHAR(50) NOT NULL,
     capacity INT NOT NULL,
     wheelchair_accessible VARCHAR(10) NOT NULL,
-    driver INT NOT NULL
+    driver INT NOT NULL, 
+    CONSTRAINT fk_driver FOREIGN KEY (driver) REFERENCES staff(staff_id)
 ) ENGINE INNODB;
 
-SET FOREIGN_KEY_CHECKS=1;
+-- Create junction tables 
+DROP TABLE IF EXISTS activity_equipment;
+CREATE TABLE activity_equipment (
+	e_activity_id INT, 
+    item_id INT, 
+    CONSTRAINT fk_e_activity_id FOREIGN KEY (e_activity_id) REFERENCES actvities(activity_id), 
+    CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES supplies(item_id)
+) ENGINE INNODB;
 
--- Alter campers table to add guardian fk
-ALTER TABLE campers
-    ADD CONSTRAINT fk_guardian
-    FOREIGN KEY (guardian)
-    REFERENCES guardians (guardian_id);
-ALTER TABLE campers
-    ADD CONSTRAINT fk_group_assignment
-    FOREIGN KEY (group_assignment)
-    REFERENCES camper_groups (group_id);
+DROP TABLE IF EXISTS activity_session;
+CREATE TABLE activity_session(
+	s_activity_id INT, 
+    session_id INT, 
+    CONSTRAINT fk_s_activity_id FOREIGN KEY (s_activity_id) REFERENCES actvities (activity_id), 
+    CONSTRAINT fk_session_id FOREIGN KEY (session_id) REFERENCES sessions (session_id)
+)ENGINE INNODB;
 
--- Alter transactions to add fk
-ALTER TABLE transactions 
-    ADD CONSTRAINT fk_trans_camper
-    FOREIGN KEY (trans_camper)
-    REFERENCES campers (camper_id);
+DROP TABLE IF EXISTS camper_group_assignments; 
+CREATE TABLE camper_group_assignments(
+	g_camper_id INT, 
+    group_id INT, 
+    CONSTRAINT fk_g_camper_id FOREIGN KEY (g_camper_id) REFERENCES campers (camper_id),
+    CONSTRAINT fk_group_id FOREIGN KEY (group_id) REFERENCES camper_groups (group_id)
+)ENGINE INNODB;
 
-ALTER TABLE transactions
-    ADD CONSTRAINT fk_trans_session
-    FOREIGN KEY (trans_session)
-    REFERENCES sessions (session_id);
+DROP TABLE IF EXISTS guardian_children;
+CREATE TABLE guardian_children(
+	guardian_id INT, 
+    camper_id INT,
+    relationship_to_camper VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_guardian_id FOREIGN KEY (guardian_id) REFERENCES guardians (guardian_id),
+    CONSTRAINT fk_camper_id FOREIGN KEY (camper_id) REFERENCES campers (camper_id)
+)ENGINE INNODB;
 
--- Alter cabins table to add fk
-ALTER TABLE cabins 
-    ADD CONSTRAINT fk_c_groups
-    FOREIGN KEY (cab_group_id)
-    REFERENCES camper_groups(group_id); 
-
--- Alter camper_groups to add fk
-ALTER TABLE camper_groups 
-    ADD CONSTRAINT fk_cg_cabin
-    FOREIGN KEY (cg_cabin)
-    REFERENCES cabins (cabin_id);
-
-ALTER TABLE camper_groups 
-    ADD CONSTRAINT fk_cg_staff
-    FOREIGN KEY (cg_staff)
-    REFERENCES staff (staff_id);
-
--- Alter sessions to add fk
-ALTER TABLE sessions
-    ADD CONSTRAINT fk_session_gid
-    FOREIGN KEY (s_group)
-    REFERENCES camper_groups (group_id);
-
--- Alter transportation to add fk
-ALTER TABLE transportation
-    ADD CONSTRAINT fk_driver
-    FOREIGN KEY (driver)
-    REFERENCES staff(staff_id);
-
--- Alter activities to add fk
-ALTER TABLE activities
-    ADD CONSTRAINT fk_activity_equipment
-    FOREIGN KEY (activity_equipment)
-    REFERENCES supplies(item_id);
-
-ALTER TABLE activities
-    ADD CONSTRAINT fk_activity_session
-    FOREIGN KEY (activity_session)
-    REFERENCES sessions(session_id);
-
-    
-/* ALTER TABLE activities
-    ADD CONSTRAINT fk_instructor
-    FOREIGN KEY (activity_instructor)
-    REFERENCES staff(staff_id); */ 
-    
--- Alter health records table
-ALTER TABLE health_records
-	ADD CONSTRAINT fk_hr_camper_id
-    FOREIGN KEY (camper_id)
-    REFERENCES campers(camper_id);
-
--- Alter table supplies
-ALTER TABLE supplies
-	ADD CONSTRAINT fk_actvity
-    FOREIGN KEY (activity_id)
-    REFERENCES activities(activity_id);
-    
--- Alter guardians table
-ALTER TABLE guardians
-	ADD CONSTRAINT fk_camper
-    FOREIGN KEY (camper)
-    REFERENCES campers(camper_id);
 
 #Insert data into the activities table
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Nature Hike", "7-18", "Guided hike through nearby trails to explore local flora and fauna.", "09:00:00", "12:00:00", "Camp Query Forest", 20, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Campfire Smores", "5-18", "Gather around a campfire for storytelling and marshmallow roasting.", "8:00:00", "10:00:00", "Camp Query Town Hall", 200, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Arts and Crafts", "7-18", "Create personalized souvenirs using materials found in nature.", "09:00:00", "12:00:00", "Arts Center", 35, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Baseball", "7-18", "Play classic baseball team vs team", "02:00:00", "04:00:00", "Baseball Diamond", 22, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Volleyball", "7-18", "Play classic volleyball team vs team", "05:00:00", "07:00:00", "Bigelow Beach", 100, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Swimming and Water Sports", "5-18", "Enjoy swimming, water volleyball, or pillow jumping.", "12:00:00", "08:00:00", "Bigelow Lake", 20, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Photogrpahy Expidition", "5-18", "Capture the beauty of nature through photography sessions led by a professional.", "12:00:00", "03:00:00", "Camp Query Forest", 20, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Capture the Flag", "5-18", "Join team to fight for the flag.", "05:00:00", "07:00:00", "Camp Query Forest", 20, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Conoeing and Kayaking", "10-18", "Learn basic paddling techniques and navigate through calm waters.", "11:00:00", "06:00:00", "Bigelow Lake", 35, NULL, NULL);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, /* activity_instructor */ capacity, activity_equipment, activity_session)
-	VALUES ("Ropes Course", "7-18", "Use teamwork and survival skills to navigate a 100 foot high rope maze", "09:00:00", "12:00:00", "Camp Query Forest", 15, NULL, NULL);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Nature Hike", "7-18", "Guided hike through nearby trails to explore local flora and fauna.", "09:00:00", "12:00:00", "Camp Query Forest", 17263, 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Campfire Smores", "5-18", "Gather around a campfire for storytelling and marshmallow roasting.", "8:00:00", "10:00:00", "Camp Query Town Hall", 14577, 200);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Arts and Crafts", "7-18", "Create personalized souvenirs using materials found in nature.", "09:00:00", "12:00:00", "Arts Center", 13562, 35);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Baseball", "7-18", "Play classic baseball team vs team", "02:00:00", "04:00:00", "Baseball Diamond", 13338, 22);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Volleyball", "7-18", "Play classic volleyball team vs team", "05:00:00", "07:00:00", "Bigelow Beach", 12567, 100);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Swimming and Water Sports", "5-18", "Enjoy swimming, water volleyball, or pillow jumping.", "12:00:00", "08:00:00", "Bigelow Lake", 14777, 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Photogrpahy Expidition", "5-18", "Capture the beauty of nature through photography sessions led by a professional.", "12:00:00", "03:00:00", "Camp Query Forest", 13364, 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor,capacity)
+	VALUES ("Capture the Flag", "5-18", "Join team to fight for the flag.", "05:00:00", "07:00:00", "Camp Query Forest", 90145, 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Conoeing and Kayaking", "10-18", "Learn basic paddling techniques and navigate through calm waters.", "11:00:00", "06:00:00", "Bigelow Lake", 33456, 35);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
+	VALUES ("Ropes Course", "7-18", "Use teamwork and survival skills to navigate a 100 foot high rope maze", "09:00:00", "12:00:00", "Camp Query Forest", 11256, 15);
+
+# Insert data into activity_equipment
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (1, 12);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (1, 4);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (6, 1);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (6, 2);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (6, 3);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (4, 10);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (5, 7);
+
+    
+# INsert data into activity_session
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(1, 1);
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(1, 2);
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(1, 3);
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(1, 4);
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(1, 5);
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(2, 2);
+INSERT into activity_session(s_activity_id, session_id)
+	VALUES(3, 1);
+
 
 #Insert data into staff table
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
@@ -313,25 +302,25 @@ INSERT INTO cabins (cabin_name, capacity)
 
 
 #Insert into campers
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 VALUES ('Rita', 'Johnson', 'F', '2008-05-15', '123 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 1);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('James', 'Smith', 'M', '2007-09-20', '456 Elm Avenue, Springtown, USA', '1986264783', 'Peanuts', 'None', 'None', 9);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Tyler', 'Brown', 'F', '2009-03-10', '789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Jamie', 'Williams', 'M', '2007-07-02', '101 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 7);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Poet', 'Davis', 'M', '2009-12-18', '234 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 2);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Wrook', 'Martinez', 'M', '2008-08-30', '67 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 10);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('AJ', 'Taylor', 'M', '2007-06-25', '12890 Willow Way, Brookside, USA', '8594728375', 'None', 'None', 'None', 1);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Jackson', 'Rodriguez', 'M', '2010-01-05', '2 Ash Street, Sunnyside, USA', '6471927483', 'None', 'None', 'None', 2);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */  group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Logan', 'Anderson', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, /* guardian */ group_assignment)
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Peyton', 'Jones', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8);
 
 #Insert data into Camper Groups table
@@ -358,26 +347,26 @@ INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
 
 
 #Insert into guardians
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Johnson", "Emily", NULL, "Mother", "123 Maple Street, Pleasantville, USA", "1827463758", "ejohn12@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Smith", "Alexander", NULL, "Brother", "456 Elm Avenue, Springtown, USA", "1986264783", "stardude92@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Brown", "Jessica", NULL, "Mother", "789 Oak Drive, Lakeside, USA", "2123456109", "swfity77@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Williams", "Matthew", NULL, "Father", "101 Pine Lane, Meadowbrook, USA", "7463889946", "matt.williams92@yahoo.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Davis", "John", NULL, "Father", "234 Cedar Court, Riverside, USA", "0927364885", "jd.adams@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Martinez", "Travis", NULL, "Father", "67 Birch Road, Hillside, USA", "6473829003", "travdawg@hotmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Taylor", "Sammy", NULL, "Father", "12890 Willow Way, Brookside, USA", "8594728375", "samantha.taylor99@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Rodriguez", "Joseph", NULL, "Guardian", "2 Ash Street, Sunnyside, USA", "6471927483", "hotrod@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Anderson", "Grace", NULL, "Aunt", "1295 Sycamore Place, Forest Hills, USA", "1928463726", "grace.anderson66@gmail.com");
-INSERT INTO guardians (last_name, first_name, camper, relationship_to_camper, home_address, phone_number, email)
-	VALUES ("Jones", "Isabella", NULL, "Mother", "5784 Magnolia Terrace, Mountain View, USA", "1746372893", "jlicious3@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Johnson", "Emily",  "123 Maple Street, Pleasantville, USA", "1827463758", "ejohn12@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Smith", "Alexander", "456 Elm Avenue, Springtown, USA", "1986264783", "stardude92@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Brown", "Jessica", "789 Oak Drive, Lakeside, USA", "2123456109", "swfity77@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Williams", "Matthew", "101 Pine Lane, Meadowbrook, USA", "7463889946", "matt.williams92@yahoo.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Davis", "John", "234 Cedar Court, Riverside, USA", "0927364885", "jd.adams@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Martinez", "Travis", "67 Birch Road, Hillside, USA", "6473829003", "travdawg@hotmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Taylor", "Sammy", "12890 Willow Way, Brookside, USA", "8594728375", "samantha.taylor99@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Rodriguez", "Joseph", "2 Ash Street, Sunnyside, USA", "6471927483", "hotrod@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Anderson", "Grace", "1295 Sycamore Place, Forest Hills, USA", "1928463726", "grace.anderson66@gmail.com");
+INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
+	VALUES ("Jones", "Isabella", "5784 Magnolia Terrace, Mountain View, USA", "1746372893", "jlicious3@gmail.com");
 
     
 #Insert data into into the sessions table
@@ -449,6 +438,8 @@ INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_
 	VALUES("Baseball Kit", 20, "Dick's Sporting Goods", 35.89, "2022-04-13", "2011-08-09");
 INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
 	VALUES("Storage Shed", 1, "Home Depot", 5175.99, "2010-09-22", "2010-10-03");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
+	VALUES("Backpacks", 30, "Dick's Sporting Goods", 35.99, "2024-04-01", "2010-04-13");
 
 
 -- Show the tables
@@ -463,3 +454,7 @@ SELECT * FROM supplies;
 SELECT * FROM staff;
 SELECT * FROM transactions;
 SELECT * FROM transportation;
+
+SELECT * FROM activity_equipment;
+SELECT * FROM activity_session;
+SELECT * FROM guardian_children;
