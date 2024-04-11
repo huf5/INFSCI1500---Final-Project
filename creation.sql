@@ -14,7 +14,7 @@ CREATE TABLE activities (
     location VARCHAR(100),
 	activity_instructor INT,
     capacity INT, 
-    CONSTRAINT fk_instructor FOREIGN KEY (activity_instructor) REFERENCES staff(staff_id)
+    CONSTRAINT fk_staff_staff_id_activites_activity_instructor FOREIGN KEY (activity_instructor) REFERENCES staff(staff_id)
 ) ENGINE INNODB;
 
 -- Create cabins table
@@ -24,7 +24,7 @@ CREATE TABLE cabins (
     cabin_name VARCHAR(50) NOT NULL,
     capacity INT NOT NULL,
     cab_group_id INT, 
-    CONSTRAINT fk_c_groups FOREIGN KEY (cab_group_id) REFERENCES camper_groups(group_id)
+    CONSTRAINT fk_camper_groups_group_id_cabins_cab_group_id FOREIGN KEY (cab_group_id) REFERENCES camper_groups(group_id)
 ) ENGINE INNODB;
 
 -- Create campers table
@@ -41,7 +41,7 @@ CREATE TABLE campers (
     special_needs VARCHAR(200) NOT NULL,
     dietary_restrictions VARCHAR(200) NOT NULL,
     group_assignment INT NOT NULL, 
-    CONSTRAINT fk_group_assignment FOREIGN KEY (group_assignment) REFERENCES camper_groups (group_id)
+    CONSTRAINT fk_camper_groups_group_id_campers_group_assignment FOREIGN KEY (group_assignment) REFERENCES camper_groups (group_id)
 ) ENGINE INNODB;
 
 -- Create camper_groups table
@@ -51,8 +51,8 @@ CREATE TABLE camper_groups (
     group_name VARCHAR(50), 
     cg_cabin INT NOT NULL, 
     cg_staff INT NOT NULL, 
-    CONSTRAINT fk_cg_cabin FOREIGN KEY (cg_cabin) REFERENCES cabins (cabin_id), 
-    CONSTRAINT fk_cg_staff FOREIGN KEY (cg_staff) REFERENCES staff (staff_id)
+    CONSTRAINT fk_cabins_cabin_id_camper_groups_cg_cabin FOREIGN KEY (cg_cabin) REFERENCES cabins (cabin_id), 
+    CONSTRAINT fk_staff_staff_id_camper_groups_cg_staff FOREIGN KEY (cg_staff) REFERENCES staff (staff_id)
 ) ENGINE INNODB;
 
 -- Create guardians table
@@ -61,8 +61,6 @@ CREATE TABLE guardians (
     guardian_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
-    -- camper INT, 
-    -- relationship_to_camper VARCHAR(50) NOT NULL,
     home_address VARCHAR(100) NOT NULL,
     phone_number VARCHAR(15) NOT NULL,
     email VARCHAR(50) NOT NULL
@@ -79,11 +77,9 @@ CREATE TABLE health_records (
     allergies TEXT,
     medications TEXT,
     medical_conditions TEXT,
-    emergency_contact_name VARCHAR(100),
-    emergency_contact_number VARCHAR(20),
     doctor_name VARCHAR(100),
     doctor_contact_number VARCHAR(20), 
-    CONSTRAINT fk_hr_camper_id FOREIGN KEY (camper_id) REFERENCES campers(camper_id)
+    CONSTRAINT fk_campers_camper_id_health_records_camper_id FOREIGN KEY (camper_id) REFERENCES campers(camper_id)
 ) ENGINE INNODB;
 
 -- Create sessions table
@@ -96,10 +92,8 @@ CREATE TABLE sessions (
     enrollment_capacity INT NOT NULL,
     registration_deadline DATE NOT NULL,
     session_status VARCHAR(50) NOT NULL,
-    session_fee INT NOT NULL, 
-    s_group INT, 
-    CONSTRAINT fk_session_gid FOREIGN KEY (s_group) REFERENCES camper_groups (group_id) 
-) ENGINE INNODB;
+    session_fee INT NOT NULL
+)ENGINE INNODB;
 
 -- Create staff table
 DROP TABLE IF EXISTS staff;
@@ -139,8 +133,8 @@ CREATE TABLE transactions (
     payment_type VARCHAR(20), 
     trans_camper INT NOT NULL, 
     trans_session INT NOT NULL, 
-    CONSTRAINT fk_trans_camper FOREIGN KEY (trans_camper) REFERENCES campers (camper_id), 
-    CONSTRAINT fk_trans_session FOREIGN KEY (trans_session) REFERENCES sessions (session_id)
+    CONSTRAINT fk_campers_camper_id_transactions_trans_camper FOREIGN KEY (trans_camper) REFERENCES campers (camper_id), 
+    CONSTRAINT fk_sessions_session_id_transactions_trans_session FOREIGN KEY (trans_session) REFERENCES sessions (session_id)
 ) ENGINE INNODB;
 
 -- Create transportation table
@@ -152,7 +146,7 @@ CREATE TABLE transportation (
     capacity INT NOT NULL,
     wheelchair_accessible VARCHAR(10) NOT NULL,
     driver INT NOT NULL, 
-    CONSTRAINT fk_driver FOREIGN KEY (driver) REFERENCES staff(staff_id)
+    CONSTRAINT fk_staff_staff_id_transportation_driver FOREIGN KEY (driver) REFERENCES staff(staff_id)
 ) ENGINE INNODB;
 
 -- Create junction tables 
@@ -160,24 +154,16 @@ DROP TABLE IF EXISTS activity_equipment;
 CREATE TABLE activity_equipment (
 	e_activity_id INT, 
     item_id INT, 
-    CONSTRAINT fk_e_activity_id FOREIGN KEY (e_activity_id) REFERENCES activities(activity_id), 
-    CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES supplies(item_id)
+    CONSTRAINT fk_activities_activity_id_activity_equipment_e_activity_id FOREIGN KEY (e_activity_id) REFERENCES activities(activity_id), 
+    CONSTRAINT fk_supplies_item_id_activity_equipment_item_id FOREIGN KEY (item_id) REFERENCES supplies(item_id)
 ) ENGINE INNODB;
 
 DROP TABLE IF EXISTS activity_session;
 CREATE TABLE activity_session(
 	s_activity_id INT, 
     session_id INT, 
-    CONSTRAINT fk_s_activity_id FOREIGN KEY (s_activity_id) REFERENCES activities (activity_id), 
-    CONSTRAINT fk_session_id FOREIGN KEY (session_id) REFERENCES sessions (session_id)
-)ENGINE INNODB;
-
-DROP TABLE IF EXISTS camper_group_assignments; 
-CREATE TABLE camper_group_assignments(
-	g_camper_id INT, 
-    group_id INT, 
-    CONSTRAINT fk_g_camper_id FOREIGN KEY (g_camper_id) REFERENCES campers (camper_id),
-    CONSTRAINT fk_group_id FOREIGN KEY (group_id) REFERENCES camper_groups (group_id)
+    CONSTRAINT fk_activities_activity_id_activity_session_s_activity_id FOREIGN KEY (s_activity_id) REFERENCES activities(activity_id),
+    CONSTRAINT fk_sessions_session_id_activity_session_session_id FOREIGN KEY (session_id) REFERENCES sessions (session_id)
 )ENGINE INNODB;
 
 DROP TABLE IF EXISTS guardian_children;
@@ -185,8 +171,8 @@ CREATE TABLE guardian_children(
 	guardian_id INT, 
     camper_id INT,
     relationship_to_camper VARCHAR(50) NOT NULL,
-    CONSTRAINT fk_guardian_id FOREIGN KEY (guardian_id) REFERENCES guardians (guardian_id),
-    CONSTRAINT fk_camper_id FOREIGN KEY (camper_id) REFERENCES campers (camper_id)
+    CONSTRAINT fk_guardians_guardian_id_guardian_children_guardian_id FOREIGN KEY (guardian_id) REFERENCES guardians (guardian_id),
+    CONSTRAINT fk_campers_camper_id_guardian_children_camper_id FOREIGN KEY (camper_id) REFERENCES campers (camper_id)
 )ENGINE INNODB;
 
 
@@ -322,6 +308,10 @@ INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency
 	VALUES ('Logan', 'Anderson', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3);
 INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
 	VALUES ('Peyton', 'Jones', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8);
+INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Davis', 'Jones', 'M', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 1);
+
+
 
 #Insert data into Camper Groups table
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
@@ -367,6 +357,30 @@ INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
 	VALUES ("Anderson", "Grace", "1295 Sycamore Place, Forest Hills, USA", "1928463726", "grace.anderson66@gmail.com");
 INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
 	VALUES ("Jones", "Isabella", "5784 Magnolia Terrace, Mountain View, USA", "1746372893", "jlicious3@gmail.com");
+
+#Insert into guardian_children
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (1, 1, "Mother");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (2, 2, "Brother");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (3, 3, "Aunt");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (4, 4, "Father");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (5, 5, "Guardian");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (6, 6, "Father");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (7, 7, "Sister");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (8, 8, "Father");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (9, 9, "Mother");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (10, 10, "Mother");
+INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
+	VALUES (10, 11, "Mother");
 
     
 #Insert data into into the sessions table
@@ -441,6 +455,28 @@ INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_
 INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
 	VALUES("Backpacks", 30, "Dick's Sporting Goods", 35.99, "2024-04-01", "2010-04-13");
 
+# Insert into health record
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(1, 4.11, 82.5, "A-", "Bee/Wasp Venom", NULL, "Asthma", "Cheryll Warner", 1756472837);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(2, 5.0, 92.0, "A-", NULL, "Prozac", NULL, "Tommy Maddox", 1435967250);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(3, 5.3, 74.0, "B+", NULL , "Adderall", NULL, "Bill Moore", 6473895617); 
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(4, 4.9, 75.4, "O-", NULL , NULL, NULL, "Stephen Lancaster", 8887564710);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(5, 4.11, 80.45, "AB-", "Peanuts", NULL, "Gastrparesis", "Maya Sayler", 5264738465);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(6, 4.11, 100.6, "AB-", "Dairy", NULL, NULL, "Cheryll Lang", 6574911164);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(7, 4.2, 72.5, "AB-", NULL, "Adderall", NULL , "Berkley May", 9887564002);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(8, 4.10, 86.2, "A+", "Gluten", "Adderall", NULL, "Sol Clementine", 7564739002);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(9, 5.4, 110.6, "B-", "Bee/Wasp Venom", NULL, NULL, "Blake Atwood", 8695847152);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES(10, 5.1, 89.5, "A+", NULL , "Strattera", "Ehlers Danlos", "Jenn Werner", 546372978);
+
 
 -- Show the tables
 SELECT * FROM activities;
@@ -457,5 +493,4 @@ SELECT * FROM transportation;
 
 SELECT * FROM activity_equipment;
 SELECT * FROM activity_session;
-SELECT * FROM guardian_children;
 SELECT * FROM guardian_children;
