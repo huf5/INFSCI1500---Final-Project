@@ -160,7 +160,7 @@ DROP TABLE IF EXISTS activity_equipment;
 CREATE TABLE activity_equipment (
 	e_activity_id INT, 
     item_id INT, 
-    CONSTRAINT fk_e_activity_id FOREIGN KEY (e_activity_id) REFERENCES actvities(activity_id), 
+    CONSTRAINT fk_e_activity_id FOREIGN KEY (e_activity_id) REFERENCES activities(activity_id), 
     CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES supplies(item_id)
 ) ENGINE INNODB;
 
@@ -168,7 +168,7 @@ DROP TABLE IF EXISTS activity_session;
 CREATE TABLE activity_session(
 	s_activity_id INT, 
     session_id INT, 
-    CONSTRAINT fk_s_activity_id FOREIGN KEY (s_activity_id) REFERENCES actvities (activity_id), 
+    CONSTRAINT fk_s_activity_id FOREIGN KEY (s_activity_id) REFERENCES activities (activity_id), 
     CONSTRAINT fk_session_id FOREIGN KEY (session_id) REFERENCES sessions (session_id)
 )ENGINE INNODB;
 
@@ -457,4 +457,5 @@ SELECT * FROM transportation;
 
 SELECT * FROM activity_equipment;
 SELECT * FROM activity_session;
+SELECT * FROM guardian_children;
 SELECT * FROM guardian_children;
