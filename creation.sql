@@ -86,11 +86,11 @@ CREATE TABLE health_records (
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
     session_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
     theme VARCHAR(50) NOT NULL,
     enrollment_capacity INT NOT NULL,
-    registration_deadline DATE NOT NULL,
+    registration_deadline DATETIME NOT NULL,
     session_status VARCHAR(50) NOT NULL,
     session_fee INT NOT NULL
 )ENGINE INNODB;
@@ -288,28 +288,87 @@ INSERT INTO cabins (cabin_name, capacity)
 
 
 #Insert into campers
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-VALUES ('Rita', 'Johnson', 'F', '2008-05-15', '123 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 1);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('James', 'Smith', 'M', '2007-09-20', '456 Elm Avenue, Springtown, USA', '1986264783', 'Peanuts', 'None', 'None', 9);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Tyler', 'Brown', 'F', '2009-03-10', '789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jamie', 'Williams', 'M', '2007-07-02', '101 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 7);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Poet', 'Davis', 'M', '2009-12-18', '234 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 2);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Wrook', 'Martinez', 'M', '2008-08-30', '67 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 10);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('AJ', 'Taylor', 'M', '2007-06-25', '12890 Willow Way, Brookside, USA', '8594728375', 'None', 'None', 'None', 1);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jackson', 'Rodriguez', 'M', '2010-01-05', '2 Ash Street, Sunnyside, USA', '6471927483', 'None', 'None', 'None', 2);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Logan', 'Anderson', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Peyton', 'Jones', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8);
-INSERT INTO campers (first_name, last_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Davis', 'Jones', 'M', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Johnson', 'Rita', 'F', '2008-05-15', '123 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Smith', 'James', 'M', '2007-09-20', '456 Elm Avenue, Springtown, USA', '1986264783', 'Peanuts', 'None', 'None', 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Brown', 'Tyler', 'F', '2009-03-10', '789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Williams', 'Jamie', 'M', '2007-07-02', '101 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Davis', 'Poet', 'M', '2009-12-18', '234 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Martinez', 'Wrook', 'M', '2008-08-30', '67 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Taylor', 'AJ', 'M', '2007-06-25', '12890 Willow Way, Brookside, USA', '8594728375', 'None', 'None', 'Vegan', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Rodriguez', 'Jackson', 'M', '2010-01-05', '2 Ash Street, Sunnyside, USA', '6471927483', 'None', 'None', 'None', 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Anderson', 'Logan', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Jones', 'Peyton', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Jones', 'Davis', 'M', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'Vegan', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Williams', 'Emma', 'F', '2009-08-25', '789 Pine Street, Brookfield, USA', '8091234567', 'None', 'None', 'Gluten Free', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Martin', 'Ethan', 'M', '2008-07-15', '56775 Elm Avenue, Springdale, USA', '3948571620', 'None', 'None', 'None', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Garcia', 'Miles', 'M', '2009-04-30', '8900 Cedar Lane, Lakeside, USA', '5768901234', 'None', 'None', 'None', 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Rodriguez', 'Noah', 'M', '2008-09-20', '1203 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Clark', 'Ava', 'F', '2009-03-10', '456B Elm Avenue, Springtown, USA', '1986264783', 'None', 'None', 'Lactose Intolerant/No Dairy', 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Harris', 'Elijah', 'M', '2007-07-02', '78911 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Brown', 'Sophia', 'F', '2009-08-15', '101C Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Martinez', 'Lucas', 'M', '2008-12-18', '23402 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Taylor', 'Olivia', 'F', '2007-06-25', '67285 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'No Dairy', 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Davis', 'William', 'M', '2009-01-05', '12890 Willow Way, Brookside, USA', '8594728375', 'Pollen', 'None', 'None', 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Jones', 'Payton', 'M', '2008-04-12', '2936 Ash Street, Sunnyside, USA', '6471927483', 'Bees/Wasp Venom', 'None', 'None', 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Wilson', 'Jackson', 'M', '2010-04-08', '12957 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Anderson', 'Charlie', 'M', '2009-05-03', '578444 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 5);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Brown', 'Benjamin', 'M', '2008-10-08', '456037 Pine Avenue, Lakeside, USA', '1746372893', 'None', 'None', 'None', 5);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('White', 'Amelia', 'F', '2008-10-08', '57849 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 5);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Thomas', 'Jacob', 'M', '2008-11-30', '78900 Oak Lane, Hilltop, USA', '2468013579', 'None', 'None', 'None', 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Jackson', 'Evelyn', 'F', '2009-02-10', '101000 Cedar Avenue, Oakwood, USA', '7080912345', 'None', 'None', 'None', 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Lee', 'Daniella', 'F', '2008-08-20', '56701 Birch Drive, Maplewood, USA', '1234567890', 'None', 'None', 'None', 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Taylor', 'Aria', 'F', '2009-04-10', '89001 Cedar Lane, Springdale, USA', '3948571620', 'Tree Nuts', 'None', 'None', 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Harris', 'Alexander', 'M', '2008-08-20', '1283 Oak Avenue, Riverside, USA', '2850374912', 'None', 'None', 'None', 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Brown', 'Grace', 'F', '2009-10-02', '45116 Cedar Lane, Springdale, USA', '3948571620', 'Onions', 'None', 'None', 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Martinez', 'Ethan', 'M', '2008-12-05', '19789 Pine Street, Brookfield, USA', '8091234567', 'None', 'None', 'None', 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Jones', 'Abigail', 'F', '2009-07-20', '13567 Elm Avenue, Springdale, USA', '3948571620', 'None', 'None', 'None', 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Wilson', 'Jamie', 'F', '2008-08-30', '89330 Cedar Lane, Lakeside, USA', '5768901234', 'None', 'None', 'None', 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Brown', 'Charlotte', 'F', '2009-09-15', '10331 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Martinez', 'Benjamin', 'M', '2008-11-18', '83234 Cedar Court, Riverside, USA', '0927364885', 'Mushroom', 'None', 'None', 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Taylor', 'Sophia', 'F', '2007-06-25', '65767 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Rodriguez', 'Darlene', 'F', '2008-08-05', '10012 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
+	VALUES ('Harris', 'Ethan', 'M', '2007-07-02', '30789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
+
 
 
 
@@ -358,6 +417,7 @@ INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
 INSERT INTO guardians (last_name, first_name, home_address, phone_number, email)
 	VALUES ("Jones", "Isabella", "5784 Magnolia Terrace, Mountain View, USA", "1746372893", "jlicious3@gmail.com");
 
+
 #Insert into guardian_children
 INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
 	VALUES (1, 1, "Mother");
@@ -382,7 +442,7 @@ INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
 INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
 	VALUES (10, 11, "Mother");
 
-    
+   
 #Insert data into into the sessions table
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
 	VALUES ('2024-06-02', '2024-06-08', 'Elementary', 75, '2024-05-15', 'OPEN', 225.00);
@@ -494,3 +554,4 @@ SELECT * FROM transportation;
 SELECT * FROM activity_equipment;
 SELECT * FROM activity_session;
 SELECT * FROM guardian_children;
+SELECT * FROM staff_session;
