@@ -86,8 +86,8 @@ CREATE TABLE health_records (
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
     session_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    start_date DATETIME NOT NULL,
-    end_date DATETIME NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
     theme VARCHAR(50) NOT NULL,
     enrollment_capacity INT NOT NULL,
     registration_deadline DATETIME NOT NULL,
@@ -175,6 +175,14 @@ CREATE TABLE guardian_children(
     CONSTRAINT fk_campers_camper_id_guardian_children_camper_id FOREIGN KEY (camper_id) REFERENCES campers (camper_id)
 )ENGINE INNODB;
 
+DROP TABLE IF EXISTS staff_session;
+CREATE TABLE staff_session(
+	staff_id INT, 
+    session_id INT, 
+    CONSTRAINT fk_staff_staff_id_staff_session_staff_id FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+    CONSTRAINT fk_sessions_session_id_staff_session_session_id FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+)ENGINE INNODB;
+
 
 #Insert data into the activities table
 INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
@@ -254,11 +262,39 @@ INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_n
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
 	VALUES (33456, 'Lennox', 'Owulatofu', 'Junior Counselor', '(254) 546-0192' , 'lennofu@gmail.com', 'Tanya Lennox (254) 546-7485', NULL, NULL, 'N');
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (11145, 'Addams', 'Tiara', 'Lead Chef', '(212) 543-9685' , 'tiaraaddams66@gmail.com', 'Diamond Addams (212) 647-6475', NULL, NULL, 'N');
+	VALUES (11145, 'Addams', 'Tiara', 'Chef', '(212) 543-9685' , 'tiaraaddams66@gmail.com', 'Diamond Addams (212) 647-6475', NULL, NULL, 'N');
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (11535, 'Gacy', 'Diya', 'Lifeguard', '(212) 536-7568' , 'dg664@gmail.com', 'Nona Gacy (212) 533-7529', 'Blueberries' , 'Halal', 'Y');
+	VALUES (11535, 'Gacy', 'Diya', 'Counselor ', '(212) 536-7568' , 'dg664@gmail.com', 'Nona Gacy (212) 533-7529', 'Blueberries' , 'Halal', 'Y');
 INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
 	VALUES (11256, 'Gacy', 'Maya', 'Counselor', '(212) 536-7580' , 'mg647@gmail.com', 'Nona Gacy (212) 533-7529', 'Peanuts' , 'Halal' , 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (22345, 'Smith', 'Emily', 'Camper Coordinator', '(412) 555-5555', 'emilysmith@example.com', 'John Smith (412) 555-5556', NULL, 'Vegetarian', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (64736, 'Johnson', 'David', 'Counselor', '(412) 555-5557', 'davidjohnson@example.com', 'Jane Johnson (412) 555-5558', NULL, NULL, 'N');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (01926, 'Williams', 'Jessica', 'Counselor', '(412) 555-5559', 'jessicawilliams@example.com', 'Jack Williams (412) 555-5560', NULL, 'Gluten-Free', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (84753, 'Brown', 'Michael', 'Chef', '(212) 555-5561', 'michaelbrown@example.com', 'Michelle Brown (212) 555-5562', NULL, NULL, 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (00925, 'Jones', 'Jennifer', 'Junior Lifeguard', '(412) 555-5563', 'jenniferjones@example.com', 'Jason Jones (412) 555-5564', NULL, 'Kosher', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (11134, 'Miller', 'Daniel', 'Counselor', '(812) 555-5565', 'danmiller@example.com', 'Diane Miller (512) 555-5566', NULL, 'Vegan', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (21101, 'Davis', 'Ashley', 'Camp Director', '(758) 555-5567', 'ashleydavis@example.com', 'Adam Davis (755) 555-5568', 'Shellfish', NULL, 'N');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (23312, 'Garcia', 'Christopher', 'Junior Counselor', '(162) 555-5569', 'chrisgarcia@example.com', 'Christina Garcia (536) 555-5570', 'Eggs', NULL, 'N');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (19453, 'Rodriguez', 'Megan', 'Kitchen Manager', '(143) 555-5571', 'meganrodriguez@example.com', 'Miguel Rodriguez (758) 555-5572', 'Milk', 'Halal', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (19463, 'Martinez', 'Joseph', 'Janitor', '(756) 555-5573', 'josephmartinez@example.com', 'Julia Martinez (756) 555-5574', 'Soy', 'Kosher', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (10994, 'Hernandez', 'Samantha', 'Janitor', '(645) 555-5575', 'samanthahernandez@example.com', 'Samuel Hernandez (645) 555-5576', NULL, 'Pescatarian', 'N');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (19884, 'Lopez', 'Matthew', 'Janitor', '(354) 555-5577', 'matthewlopez@example.com', 'Maria Lopez (354) 555-5578', 'Pollen', 'Vegan', 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (17264, 'Gonzalez', 'Amanda', 'Janitor', '(647) 555-5579', 'amandagonzalez@example.com', 'Alex Gonzalez (647) 555-5580', NULL, NULL, 'Y');
+INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES (10006, 'Wilson', 'Andrew', 'Maintenance', '(098) 555-5581', 'andrewwilson@example.com', 'Anna Wilson (098) 555-5582', 'Peanuts', NULL, 'Y');
 
 #Insert data into the Cabins table
 INSERT INTO cabins (cabin_name, capacity)
@@ -445,27 +481,27 @@ INSERT INTO guardian_children (guardian_id, camper_id, relationship_to_camper)
    
 #Insert data into into the sessions table
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-06-02', '2024-06-08', 'Elementary', 75, '2024-05-15', 'OPEN', 225.00);
+	VALUES ('2024-06-02', '2024-06-08', 'Elementary', 75, '2024-05-15 11:59:00', 'OPEN', 225.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-06-02', '2024-06-12', 'Middle School Extended', 100, '2024-05-15', 'OPEN', 430.00);
+	VALUES ('2024-06-02', '2024-06-12', 'Middle School Extended', 100, '2024-05-15 11:59:00', 'OPEN', 430.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-06-09', '2024-06-15', 'Performing Arts', 100, '2024-05-20', 'OPEN', 350.00);
+	VALUES ('2024-06-09', '2024-06-15', 'Performing Arts', 100, '2024-05-20 11:59:00', 'OPEN', 350.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-06-09', '2024-06-15', 'Fine Arts', 100, '2024-05-15', 'FULL', 225.00);
+	VALUES ('2024-06-09', '2024-06-15', 'Fine Arts', 100, '2024-05-15 11:59:00', 'FULL', 225.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-06-20', '2024-06-25', 'Pre-K and Kinder', 75, '2024-05-15', 'OPEN', 150.00);
+	VALUES ('2024-06-20', '2024-06-25', 'Pre-K and Kinder', 75, '2024-05-15 11:59:00', 'OPEN', 150.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-07-01', '2024-07-30', 'High School Extended', 125, '2024-05-15', 'FULL', 1300.00);
+	VALUES ('2024-07-01', '2024-07-30', 'High School Extended', 125, '2024-05-15 11:59:00', 'FULL', 1300.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-07-01', '2024-07-15', 'High School', 75, '2024-05-15', 'FULL', 700.00);
+	VALUES ('2024-07-01', '2024-07-15', 'High School', 75, '2024-05-15 11:59:00', 'FULL', 700.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-08-01', '2024-08-15', 'Adult', 25, '2024-05-15', 'FULL', 500.00);
+	VALUES ('2024-08-01', '2024-08-15', 'Adult', 25, '2024-05-15 11:59:00', 'FULL', 500.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-08-01', '2024-08-15', 'Elementary', 75, '2024-05-15', 'OPEN', 475.00);
+	VALUES ('2024-08-01', '2024-08-15', 'Elementary', 75, '2024-05-15 11:59:00', 'OPEN', 475.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-12-27', '2025-01-07', 'Performing Arts', 50, '2024-10-15', 'REGISTRATION SOON', 575.00);
+	VALUES ('2024-12-27', '2025-01-07', 'Performing Arts', 50, '2024-10-15 11:59:00', 'REGISTRATION SOON', 575.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-12-27', '2025-01-07', 'Fine Arts', 50, '2024-10-15', 'REGISTRATION SOON', 575.00);
+	VALUES ('2024-12-27', '2025-01-07', 'Fine Arts', 50, '2024-10-15 11:59:00', 'REGISTRATION SOON', 575.00);
     
 #Insert data into transportation table
 INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
@@ -519,24 +555,134 @@ INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
 	VALUES(1, 4.11, 82.5, "A-", "Bee/Wasp Venom", NULL, "Asthma", "Cheryll Warner", 1756472837);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(2, 5.0, 92.0, "A-", NULL, "Prozac", NULL, "Tommy Maddox", 1435967250);
+	VALUES(2, 5.0, 92.0, "A-", NULL, "Prozac", NULL, "Dr. Tommy Maddox", 1435967250);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(3, 5.3, 74.0, "B+", NULL , "Adderall", NULL, "Bill Moore", 6473895617); 
+	VALUES(3, 5.3, 74.0, "B+", NULL , "Adderall", NULL, "Dr. Bill Moore", 6473895617); 
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(4, 4.9, 75.4, "O-", NULL , NULL, NULL, "Stephen Lancaster", 8887564710);
+	VALUES(4, 4.9, 75.4, "O-", NULL , NULL, NULL, "Dr. Stephen Lancaster", 8887564710);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
 	VALUES(5, 4.11, 80.45, "AB-", "Peanuts", NULL, "Gastrparesis", "Maya Sayler", 5264738465);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(6, 4.11, 100.6, "AB-", "Dairy", NULL, NULL, "Cheryll Lang", 6574911164);
+	VALUES(6, 4.11, 100.6, "AB-", "Dairy", NULL, NULL, "Dr. Cheryll Lang", 6574911164);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(7, 4.2, 72.5, "AB-", NULL, "Adderall", NULL , "Berkley May", 9887564002);
+	VALUES(7, 4.2, 72.5, "AB-", NULL, "Adderall", NULL , "Dr. Berkley May", 9887564002);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(8, 4.10, 86.2, "A+", "Gluten", "Adderall", NULL, "Sol Clementine", 7564739002);
+	VALUES(8, 4.10, 86.2, "A+", "Gluten", "Adderall", NULL, "Dr. Sol Clementine", 7564739002);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(9, 5.4, 110.6, "B-", "Bee/Wasp Venom", NULL, NULL, "Blake Atwood", 8695847152);
+	VALUES(9, 5.4, 110.6, "B-", "Bee/Wasp Venom", NULL, NULL, "Dr. Blake Atwood", 8695847152);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
-	VALUES(10, 5.1, 89.5, "A+", NULL , "Strattera", "Ehlers Danlos", "Jenn Werner", 546372978);
+	VALUES(10, 5.1, 89.5, "A+", NULL , "Strattera", "Ehlers Danlos", "Dr. Jenn Werner", 546372978);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (11, 4.9, 73.2, 'B-', NULL, NULL, 'Eczema', 'Dr. Mia Adams', 2348765432);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (12, 4.8, 68.7, 'A+', 'Shellfish', NULL, 'Asthma', 'Dr. Benjamin Scott', 3457654321);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (13, 4.7, 72.3, 'AB+', 'Pollen', 'Allegra', NULL, 'Dr. Madison Clark', 4566543210);	
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (14, 4.9, 70.1, 'O+', 'Dairy', NULL, 'Asthma', 'Dr. Ethan Roberts', 5675432109);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (15, 5.0, 75.8, 'B-', 'Peanuts', 'Claritin', NULL, 'Dr. Zoe Johnson', 6784321098);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (16, 4.8, 69.5, 'A+', NULL, 'Flonase', 'Diabetes', 'Dr. Leo Wright', 7893210987);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (17, 4.7, 67.9, 'AB+', 'Shellfish', 'Benadryl', 'Asthma', 'Dr. Layla Mitchell', 8902109876);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (18, 5.1, 76.4, 'O-', NULL, 'Zyrtec', 'Epilepsy', 'Dr. Ryder Perez', 9010987654);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (19, 4.9, 72.2, 'B+', 'Pollen', NULL, 'ADHD', 'Dr. Hannah Lewis', 1234567890);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (20, 4.8, 70.5, 'A-', NULL, NULL, 'Asthma', 'Dr. Mason Hall', 2345678901);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (21, 5.0, 74.6, 'AB-', NULL, NULL, 'Diabetes', 'Dr. Avery Phillips', 3456789012);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (22, 4.7, 68.9, 'O+', NULL, NULL, NULL, 'Dr. Peyton Turner', 4567890123);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (23, 4.8, 72.1, 'B-', 'Dairy', 'Ventolin', 'Asthma', 'Dr. Skylar Hughes', 5678901234);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (24, 5.1, 78.3, 'A+', NULL, NULL, 'ADHD', 'Dr. Riley Foster', 6789012345);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (25, 4.8, 69.7, 'AB+', 'Pollen', 'Claritin', 'Asthma', 'Dr. Morgan Coleman', 7890123456);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (26, 4.9, 71.3, 'O-', NULL, 'Zyrtec', 'Eczema', 'Dr. Jordan Diaz', 8901234567);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (27, 4.8, 68.5, 'A+', NULL, NULL, NULL, 'Dr. Riley Perry', 9012345678);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (28, 5.0, 76.9, 'B-', 'Peanuts', NULL, NULL, 'Dr. Taylor Ward', 1239876543);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (29, 4.7, 70.2, 'A-', 'Shellfish', NULL, 'Asthma', 'Dr. Reese Murphy', 2348765432);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (30, 4.8, 73.1, 'O+', 'Dairy', NULL, NULL, 'Dr. Rowan Ellis', 3457654321);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (31, 4.9, 70.8, 'A+', 'Pollen', NULL, NULL, 'Dr. Finley Barker', 4566543210);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (32, 4.8, 69.2, 'AB+', 'Shellfish', NULL, 'Diabetes', 'Dr. Avery Hayes', 5675432109);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (33, 4.9, 71.7, 'O-', NULL, NULL, 'Asthma', 'Dr. Morgan Simpson', 6784321098);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (34, 5.0, 76.3, 'B+', 'Pollen', NULL, 'ADHD', 'Dr. Hayden Armstrong', 7893210987);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (35, 4.8, 72.4, 'A-', NULL, NULL, 'Asthma', 'Dr. Sydney Fitzgerald', 8902109876);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (36, 5.0, 75.2, 'AB-', NULL, 'Flonase', 'Diabetes', 'Dr. Cameron Willis', 9010987654);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (37, 4.9, 71.1, 'O+', 'Peanuts', NULL, NULL, 'Dr. Kendall Price', 1234567890);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (38, 4.8, 69.9, 'B-', 'Dairy',NULL , NULL, 'Dr. Jordan Peterson', 2345678901);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (39, 4.9, 72.6, 'A+', NULL, NULL, NULL, 'Dr. Cameron Bell', 3456789012);
+INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
+	VALUES (40, 4.8, 70.3, 'AB+', 'Shellfish', NULL, NULL, 'Dr. Kendall Howard', 4567890123);
 
+#Insert into staff_session
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (17263, 6), (17263, 3), (17263, 10), (17263, 1), (17263, 7), (17263, 11);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (14577, 9), (14577, 4), (14577, 2), (14577, 8), (14577, 5), (14577, 1);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (13562, 3), (13562, 8), (13562, 4), (13562, 11), (13562, 9), (13562, 6);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (13338, 10), (13338, 6), (13338, 5), (13338, 2), (13338, 8), (13338, 7);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (12567, 4), (12567, 1), (12567, 7), (12567, 10), (12567, 9), (12567, 11);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES(14777, 1), (14777, 5), (14777, 9), (14777, 6), (14777, 3), (14777, 8);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (13364, 2), (13364, 10), (13364, 8), (13364, 4), (13364, 11), (13364, 5);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (11535, 6), (11535, 8), (11535, 2), (11535, 7), (11535, 10), (11535, 4);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (11256, 3), (11256, 7), (11256, 1), (11256, 9), (11256, 11), (11256, 6);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (22345, 10), (22345, 7), (22345, 6), (22345, 5), (22345, 3), (22345, 2);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (64736, 3), (64736, 9), (64736, 5), (64736, 7), (64736, 2), (64736, 4);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (01926, 4), (01926, 5), (01926, 10), (01926, 7), (01926, 8), (01926, 3);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (84753, 1), (84753, 6), (84753, 4), (84753, 8), (84753, 11), (84753, 10);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (11145, 5), (11145, 1), (11145, 4), (11145, 9), (11145, 2), (11145, 10);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (33456, 1), (33456, 9), (33456, 7), (33456, 11), (33456, 3), (33456, 5);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (90146, 7), (90146, 2), (90146, 10), (90146, 8), (90146, 11), (90146, 1);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (90145, 11), (90145, 3), (90145, 6), (90145, 1), (90145, 10), (90145, 5);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (10994, 8), (10994, 11), (10994, 3), (10994, 5), (10994, 7), (10994, 1);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (19463, 10), (19463, 1), (19463, 9), (19463, 6), (19463, 3), (19463, 5);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (19453, 6), (19453, 4), (19453, 9), (19453, 2), (19453, 11), (19453, 7);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (23312, 11), (23312, 10), (23312, 1), (23312, 6), (23312, 3), (23312, 7);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (21101, 9), (21101, 5), (21101, 6), (21101, 10), (21101, 8), (21101, 7);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (11134, 6), (11134, 8), (11134, 4), (11134, 10), (11134, 3), (11134, 1);
+INSERT INTO staff_session (staff_id, session_id)
+	VALUES (00925, 2), (00925, 5), (00925, 3), (00925, 8), (00925, 7), (00925, 9);
+           
 
 -- Show the tables
 SELECT * FROM activities;
@@ -555,3 +701,39 @@ SELECT * FROM activity_equipment;
 SELECT * FROM activity_session;
 SELECT * FROM guardian_children;
 SELECT * FROM staff_session;
+
+-- Questions
+# 1 - Who are the campers with an allergy? 
+SELECT 
+	CONCAT(first_name," ",last_name) as "Name",
+	hr.allergies as "Allergy"
+FROM campers c
+JOIN health_records hr ON c.camper_id = hr.camper_id
+WHERE hr.allergies IS NOT NULL;
+
+# 4 - How many campers are assigned to each camp session
+
+# 6 - What are the sessions least expensive to most expensive?
+SELECT 
+	session_id as "ID",
+    start_date as "Start Date",
+    end_date as "End Date",
+    theme as "Theme", 
+    session_fee as "Cost"
+FROM sessions
+ORDER BY session_fee ASC;
+
+# 9 - Who are all the campers registered?
+Select CONCAT(first_name, " ", last_name) as "Camper Name" FROM campers;
+
+# 10 - What is the average cost of all the sessions offered?
+SELECT AVG(session_fee) AS "Avaergae" FROM sessions;
+
+# 11 - What session will each staff member be assigned to?
+SELECT 
+	CONCAT(first_name, " ", last_name) AS "Name",
+    se.session_id AS "Session ID", 
+    se.theme AS "Session Theme"
+FROM staff s
+JOIN staff_session ss ON s.staff_id = ss.staff_id
+JOIN sessions se ON ss.session_id = se.session_id;
