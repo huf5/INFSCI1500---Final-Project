@@ -119,7 +119,10 @@ CREATE TABLE supplies (
     supplier VARCHAR(100) NOT NULL, 
     cost INT NOT NULL, 
     order_date DATETIME NOT NULL, 
-    delivery_date DATETIME NOT NULL
+    delivery_date DATETIME NOT NULL,
+    weight DECIMAL(10,2),
+    expiration_date DATE,
+    category VARCHAR(50)
     -- activity_id INT
 ) ENGINE INNODB;
 
@@ -140,12 +143,15 @@ CREATE TABLE transactions (
 -- Create transportation table
 DROP TABLE IF EXISTS transportation;
 CREATE TABLE transportation (
-    vehicle_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     route VARCHAR(50), 
     vehicle_type VARCHAR(50) NOT NULL,
     capacity INT NOT NULL,
     wheelchair_accessible VARCHAR(10) NOT NULL,
     driver INT NOT NULL, 
+    mileage DECIMAL(10,2),
+    fuel_type VARCHAR(50),
+    maintenance_status VARCHAR(50),
     CONSTRAINT fk_staff_staff_id_transportation_driver FOREIGN KEY (driver) REFERENCES staff(staff_id)
 ) ENGINE INNODB;
 
@@ -502,54 +508,56 @@ INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registra
 	VALUES ('2024-12-27', '2025-01-07', 'Performing Arts', 50, '2024-10-15 11:59:00', 'REGISTRATION SOON', 575.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
 	VALUES ('2024-12-27', '2025-01-07', 'Fine Arts', 50, '2024-10-15 11:59:00', 'REGISTRATION SOON', 575.00);
-    
-#Insert data into transportation table
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Pine Grove", "SUV", 6, "N", 14777);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Pine Grove", "Bus", 30, "Y", 12567);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Sleepy Rocks", "SUV", 6, "N", 13562);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Sleepy Rocks", "SUV", 6, "N", 14777);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Portland Center", "Bus", 30, "Y", 33456);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Ruffaloville", "SUV", 6, "N", 11145);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Sailing", "Truck", 6, "N", 17263);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Sailing", "SUV", 6, "N", 13338);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Sailing", "Truck", 6, "N", 11535);
-INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver)
-	VALUES ("Piney Forest", "SUV", 6, "N", 13338);
+
+-- Transportation
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Pine Grove", "SUV", 6, "N", 14777, 35000.00, "Gasoline", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Pine Grove", "Bus", 30, "Y", 12567, 70000.00, "Diesel", "Needs Service");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Sleepy Rocks", "SUV", 6, "N", 13562, 45000.00, "Gasoline", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Sleepy Rocks", "SUV", 6, "N", 14777, 48000.00, "Gasoline", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Portland Center", "Bus", 30, "Y", 33456, 60000.00, "Diesel", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Ruffaloville", "SUV", 6, "N", 11145, 30000.00, "Gasoline", "Needs Service");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Sailing", "Truck", 6, "N", 17263, 55000.00, "Diesel", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Sailing", "SUV", 6, "N", 13338, 40000.00, "Gasoline", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Sailing", "Truck", 6, "N", 11535, 48000.00, "Diesel", "Good");
+INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
+	VALUES ("Piney Forest", "SUV", 6, "N", 13338, 32000.00, "Gasoline", "Good");
+
 
 -- Insert infromation into the supplies table
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Kayak", 17, "Brooklyn Kayak Company", 299.99, "2022-04-22", "2022-05-30");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Canoe", 5, "Brooklyn Kayak Company", 799.99, "2022-04-22", "2022-06-05");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Water Pillow", 1, "Inflatable-Zone", 1199.00, "2023-04-01", "2023-05-02");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Tent", 10, "Dick's Sporting Goods", 299.99, "2023-02-16", "2020-05-10");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Bicycle", 25, "Dick's Sporting Goods", 199.00, "2022-05-27", "2017-06-13");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Soccer Ball", 17, "Dick's Sporting Goods", 19.47, "2022-04-02", "2024-04-13");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Volleyball Net", 3, "Dick's Sporting Goods", 145.00, "2022-03-01", "2020-03-13");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Lifeguard Tower", 2, "American Lifeguard Products", 7250.00, "2022-04-10", "2019-02-19");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Archer  Kit", 20, "Dick's Sporting Goods", 195.00, "2022-04-12", "2010-09-22");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Baseball Kit", 20, "Dick's Sporting Goods", 35.89, "2022-04-13", "2011-08-09");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Storage Shed", 1, "Home Depot", 5175.99, "2010-09-22", "2010-10-03");
-INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date)
-	VALUES("Backpacks", 30, "Dick's Sporting Goods", 35.99, "2024-04-01", "2010-04-13");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Kayak", 17, "Brooklyn Kayak Company", 299.99, "2022-04-22", "2022-05-30", NULL, 30.5, NULL, "Water Sports");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Canoe", 5, "Brooklyn Kayak Company", 799.99, "2022-04-22", "2022-06-05", NULL, 45.8, NULL, "Water Sports");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Water Pillow", 1, "Inflatable-Zone", 1199.00, "2023-04-01", "2023-05-02", NULL, NULL, NULL, "Camping");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Tent", 10, "Dick's Sporting Goods", 299.99, "2023-02-16", "2020-05-10", NULL, NULL, NULL, "Camping");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Bicycle", 25, "Dick's Sporting Goods", 199.00, "2022-05-27", "2017-06-13", NULL, NULL, NULL, "Cycling");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Soccer Ball", 17, "Dick's Sporting Goods", 19.47, "2022-04-02", "2024-04-13", NULL, NULL, NULL, "Sports");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Volleyball Net", 3, "Dick's Sporting Goods", 145.00, "2022-03-01", "2020-03-13", NULL, NULL, NULL, "Sports");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Lifeguard Tower", 2, "American Lifeguard Products", 7250.00, "2022-04-10", "2019-02-19", NULL, NULL, NULL, "Beach Equipment");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Archer Kit", 20, "Dick's Sporting Goods", 195.00, "2022-04-12", "2010-09-22", NULL, NULL, NULL, "Sports");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Baseball Kit", 20, "Dick's Sporting Goods", 35.89, "2022-04-13", "2011-08-09", NULL, NULL, NULL, "Sports");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Storage Shed", 1, "Home Depot", 5175.99, "2010-09-22", "2010-10-03", NULL, NULL, NULL, "Storage");
+INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
+	VALUES("Backpacks", 30, "Dick's Sporting Goods", 35.99, "2024-04-01", "2010-04-13", NULL, NULL, NULL, "Outdoor Gear");
+
 
 # Insert into health record
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
