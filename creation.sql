@@ -37,9 +37,7 @@ CREATE TABLE campers (
     special_needs VARCHAR(200) NOT NULL,
     dietary_restrictions VARCHAR(200) NOT NULL,
     group_assignment INT NOT NULL, 
-    c_session INT NOT NULL,
-    CONSTRAINT fk_camper_groups_group_id_campers_group_assignment FOREIGN KEY (group_assignment) REFERENCES camper_groups (group_id),
-    CONSTRAINT fk_session_session_id_campers_c_session FOREIGN KEY (c_session) REFERENCES sessions(session_id)
+    c_session INT NOT NULL
 ) ENGINE INNODB;
 
 -- Create camper_groups table
@@ -172,11 +170,21 @@ CREATE TABLE guardian_children(
 )ENGINE INNODB;
 
 DROP TABLE IF EXISTS staff_activity;
+DROP TABLE IF EXISTS staff_session;
 CREATE TABLE staff_activity(
 	sa_staff_id INT, 
     sa_activity_id INT,
     CONSTRAINT fk_staff_staff_id_staff_activity_sa_staff_id FOREIGN KEY (sa_staff_id) REFERENCES staff(staff_id),
-    CONSTRAINT fk_activities_activity_id_staff_activity_activity_id FOREIGN KEY (sa_activity_id) REFERENCES sessions(session_id)
+    CONSTRAINT fk_activities_activity_id_staff_activity_activity_id FOREIGN KEY (sa_activity_id) REFERENCES activities(activity_id)
+)ENGINE INNODB;
+
+DROP TABLE IF EXISTS activity_session;
+DROP TABLE IF EXISTS session_camper;
+CREATE TABLE session_camper(
+	sc_session_id INT,
+    sc_camper_id INT,
+    CONSTRAINT fk_sessions_session_id_session_camper_sc_session_id FOREIGN KEY (sc_session_id) REFERENCES sessions(session_id),
+    CONSTRAINT fk_campers_camper_id_session_camper_sc_camper_id FOREIGN KEY (sc_camper_id) REFERENCES campers(camper_id)
 )ENGINE INNODB;
 
 
@@ -257,6 +265,12 @@ INSERT INTO activity_equipment(e_activity_id, item_id)
 	VALUES (4, 10);
 INSERT INTO activity_equipment(e_activity_id, item_id)
 	VALUES (5, 7);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (1, 2);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (1, 3);
+INSERT INTO activity_equipment(e_activity_id, item_id)
+	VALUES (4, 7);
 
 #Insert data into staff table
 INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
@@ -778,7 +792,30 @@ INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_
 	VALUES (21347, "Tuition", 350.00, "2024-02-16 09:27:58", "Credit", 38, 3);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
 	VALUES (86421, "Deposit", 150.00, "2024-03-08 13:58:31", "Debit", 40, 5);
-
+ 
+ #Insert into session_camper junction table
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 12);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 1);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 29);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 3);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 20);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 2);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 4);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 9);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 8);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 11);
+INSERT INTO session_camper(sc_session_id, sc_camper_id)
+	VALUES(1, 15);
 
 -- Show the tables
 SELECT * FROM activities;
@@ -795,6 +832,6 @@ SELECT * FROM transportation;
 
 SELECT * FROM activity_equipment;
 SELECT * FROM guardian_children;
-SELECT * FROM staff_session;
 SELECT * FROM staff_activity;
+SELECT * FROM session_camper;
 
