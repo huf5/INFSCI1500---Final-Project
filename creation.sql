@@ -41,7 +41,9 @@ CREATE TABLE campers (
     special_needs VARCHAR(200) NOT NULL,
     dietary_restrictions VARCHAR(200) NOT NULL,
     group_assignment INT NOT NULL, 
-    CONSTRAINT fk_camper_groups_group_id_campers_group_assignment FOREIGN KEY (group_assignment) REFERENCES camper_groups (group_id)
+    c_session INT NOT NULL,
+    CONSTRAINT fk_camper_groups_group_id_campers_group_assignment FOREIGN KEY (group_assignment) REFERENCES camper_groups (group_id),
+    CONSTRAINT fk_session_session_id_campers_c_session FOREIGN KEY (c_session) REFERENCES sessions(session_id)
 ) ENGINE INNODB;
 
 -- Create camper_groups table
@@ -134,8 +136,8 @@ CREATE TABLE transactions (
     amount INT,
     transaction_date DATETIME,
     payment_type VARCHAR(20), 
-    trans_camper INT NOT NULL, 
-    trans_session INT NOT NULL, 
+    trans_camper INT, 
+    trans_session INT, 
     CONSTRAINT fk_campers_camper_id_transactions_trans_camper FOREIGN KEY (trans_camper) REFERENCES campers (camper_id), 
     CONSTRAINT fk_sessions_session_id_transactions_trans_session FOREIGN KEY (trans_session) REFERENCES sessions (session_id)
 ) ENGINE INNODB;
@@ -330,88 +332,86 @@ INSERT INTO cabins (cabin_name, capacity)
 
 
 #Insert into campers
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Johnson', 'Rita', 'F', '2008-05-15', '123 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 1);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Smith', 'James', 'M', '2007-09-20', '456 Elm Avenue, Springtown, USA', '1986264783', 'Peanuts', 'None', 'None', 9);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Brown', 'Tyler', 'F', '2009-03-10', '789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Williams', 'Jamie', 'M', '2007-07-02', '101 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 7);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Davis', 'Poet', 'M', '2009-12-18', '234 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 2);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Martinez', 'Wrook', 'M', '2008-08-30', '67 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 10);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Taylor', 'AJ', 'M', '2007-06-25', '12890 Willow Way, Brookside, USA', '8594728375', 'None', 'None', 'Vegan', 1);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Rodriguez', 'Jackson', 'M', '2010-01-05', '2 Ash Street, Sunnyside, USA', '6471927483', 'None', 'None', 'None', 2);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Anderson', 'Logan', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jones', 'Peyton', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jones', 'Davis', 'M', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'Vegan', 1);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Williams', 'Emma', 'F', '2009-08-25', '789 Pine Street, Brookfield, USA', '8091234567', 'None', 'None', 'Gluten Free', 1);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Martin', 'Ethan', 'M', '2008-07-15', '56775 Elm Avenue, Springdale, USA', '3948571620', 'None', 'None', 'None', 1);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Garcia', 'Miles', 'M', '2009-04-30', '8900 Cedar Lane, Lakeside, USA', '5768901234', 'None', 'None', 'None', 1);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Rodriguez', 'Noah', 'M', '2012-09-20', '1203 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 2);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Clark', 'Ava', 'F', '2009-03-10', '456B Elm Avenue, Springtown, USA', '1986264783', 'None', 'None', 'Lactose Intolerant/No Dairy', 2);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Harris', 'Elijah', 'M', '2006-07-02', '78911 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 2);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Brown', 'Sophia', 'F', '2006-08-15', '101C Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 3);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Martinez', 'Lucas', 'M', '2008-12-18', '23402 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 3);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Taylor', 'Olivia', 'F', '2007-06-25', '67285 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'No Dairy', 3);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Davis', 'William', 'M', '2009-01-05', '12890 Willow Way, Brookside, USA', '8594728375', 'Pollen', 'None', 'None', 4);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jones', 'Payton', 'M', '2008-04-12', '2936 Ash Street, Sunnyside, USA', '6471927483', 'Bees/Wasp Venom', 'None', 'None', 4);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Wilson', 'Jackson', 'M', '2010-04-08', '12957 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 4);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Anderson', 'Charlie', 'M', '2009-05-03', '57444 Magpie Lane, Mountain View, USA', '1746372893', 'None', 'None', 'None', 5);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Brown', 'Benjamin', 'M', '2010-10-08', '456037 Pine Avenue, Lakeside, USA', '1746372893', 'None', 'None', 'None', 5);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('White', 'Amelia', 'F', '2010-10-08', '57849 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 5);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Thomas', 'Jacob', 'M', '2012-11-30', '78900 Oak Lane, Hilltop, USA', '2468013579', 'None', 'None', 'None', 6);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jackson', 'Evelyn', 'F', '2013-02-10', '101000 Cedar Avenue, Oakwood, USA', '7080912345', 'None', 'None', 'None', 6);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Lee', 'Daniella', 'F', '2008-08-20', '56701 Birch Drive, Maplewood, USA', '1234567890', 'None', 'None', 'None', 6);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Taylor', 'Aria', 'F', '2013-04-10', '89001 Cedar Lane, Springdale, USA', '3948571620', 'Tree Nuts', 'None', 'None', 7);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Harris', 'Alexander', 'M', '2008-08-20', '1283 Oak Avenue, Riverside, USA', '2850374912', 'None', 'None', 'None', 7);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Brown', 'Grace', 'F', '2009-10-02', '45116 Cedar Lane, Springdale, USA', '3948571620', 'Onions', 'None', 'None', 7);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Martinez', 'Ethan', 'M', '2008-12-05', '19789 Pine Street, Brookfield, USA', '8091234567', 'None', 'None', 'None', 8);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Jones', 'Abigail', 'F', '2009-07-20', '13567 Elm Avenue, Springdale, USA', '3948571620', 'None', 'None', 'None', 8);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Wilson', 'Jamie', 'F', '2008-08-30', '89330 Cedar Lane, Lakeside, USA', '5768901234', 'None', 'None', 'None', 8);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Brown', 'Charlotte', 'F', '2006-09-15', '10331 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 9);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Martinez', 'Benjamin', 'M', '2007-11-18', '83234 Cedar Court, Riverside, USA', '0927364885', 'Mushroom', 'None', 'None', 9);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Taylor', 'Sophia', 'F', '2007-06-25', '65767 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 9);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Rodriguez', 'Darlene', 'F', '2011-08-05', '10012 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 10);
-INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment)
-	VALUES ('Harris', 'Ethan', 'M', '2007-07-02', '30789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10);
-
-
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Johnson', 'Rita', 'F', '2008-05-15', '123 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 1, 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Smith', 'James', 'M', '2007-09-20', '456 Elm Avenue, Springtown, USA', '1986264783', 'Peanuts', 'None', 'None', 9, 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Brown', 'Tyler', 'F', '2009-03-10', '789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10, 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Williams', 'Jamie', 'M', '2007-07-02', '101 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 7, 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Davis', 'Poet', 'M', '2009-12-18', '234 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 2, 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Martinez', 'Wrook', 'M', '2008-08-30', '67 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 10, 5);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Taylor', 'AJ', 'M', '2007-06-25', '12890 Willow Way, Brookside, USA', '8594728375', 'None', 'None', 'Vegan', 1, 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Rodriguez', 'Jackson', 'M', '2010-01-05', '2 Ash Street, Sunnyside, USA', '6471927483', 'None', 'None', 'None', 2, 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Anderson', 'Logan', 'F', '2009-04-12', '1295 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 3, 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Jones', 'Peyton', 'F', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 8, 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Jones', 'Davis', 'M', '2008-10-08', '5784 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'Vegan', 1, 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Williams', 'Emma', 'F', '2009-08-25', '789 Pine Street, Brookfield, USA', '8091234567', 'None', 'None', 'Gluten Free', 1, 11);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Martin', 'Ethan', 'M', '2008-07-15', '56775 Elm Avenue, Springdale, USA', '3948571620', 'None', 'None', 'None', 1, 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Garcia', 'Miles', 'M', '2009-04-30', '8900 Cedar Lane, Lakeside, USA', '5768901234', 'None', 'None', 'None', 1, 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Rodriguez', 'Noah', 'M', '2012-09-20', '1203 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 2, 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Clark', 'Ava', 'F', '2009-03-10', '456B Elm Avenue, Springtown, USA', '1986264783', 'None', 'None', 'Lactose Intolerant/No Dairy', 2, 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Harris', 'Elijah', 'M', '2006-07-02', '78911 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 2, 5);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Brown', 'Sophia', 'F', '2006-08-15', '101C Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 3, 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Martinez', 'Lucas', 'M', '2008-12-18', '23402 Cedar Court, Riverside, USA', '0927364885', 'None', 'None', 'None', 3, 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Taylor', 'Olivia', 'F', '2007-06-25', '67285 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'No Dairy', 3, 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Davis', 'William', 'M', '2009-01-05', '12890 Willow Way, Brookside, USA', '8594728375', 'Pollen', 'None', 'None', 4, 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Jones', 'Payton', 'M', '2008-04-12', '2936 Ash Street, Sunnyside, USA', '6471927483', 'Bees/Wasp Venom', 'None', 'None', 4, 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Wilson', 'Jackson', 'M', '2010-04-08', '12957 Sycamore Place, Forest Hills, USA', '1928463726', 'None', 'None', 'None', 4, 11);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Anderson', 'Charlie', 'M', '2009-05-03', '57444 Magpie Lane, Mountain View, USA', '1746372893', 'None', 'None', 'None', 5, 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Brown', 'Benjamin', 'M', '2010-10-08', '456037 Pine Avenue, Lakeside, USA', '1746372893', 'None', 'None', 'None', 5, 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('White', 'Amelia', 'F', '2010-10-08', '57849 Magnolia Terrace, Mountain View, USA', '1746372893', 'None', 'None', 'None', 5, 1);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Thomas', 'Jacob', 'M', '2012-11-30', '78900 Oak Lane, Hilltop, USA', '2468013579', 'None', 'None', 'None', 6, 8);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Jackson', 'Evelyn', 'F', '2013-02-10', '101000 Cedar Avenue, Oakwood, USA', '7080912345', 'None', 'None', 'None', 6, 5);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Lee', 'Daniella', 'F', '2008-08-20', '56701 Birch Drive, Maplewood, USA', '1234567890', 'None', 'None', 'None', 6, 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Taylor', 'Aria', 'F', '2013-04-10', '89001 Cedar Lane, Springdale, USA', '3948571620', 'Tree Nuts', 'None', 'None', 7, 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Harris', 'Alexander', 'M', '2008-08-20', '1283 Oak Avenue, Riverside, USA', '2850374912', 'None', 'None', 'None', 7, 7);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Brown', 'Grace', 'F', '2009-10-02', '45116 Cedar Lane, Springdale, USA', '3948571620', 'Onions', 'None', 'None', 7, 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Martinez', 'Ethan', 'M', '2008-12-05', '19789 Pine Street, Brookfield, USA', '8091234567', 'None', 'None', 'None', 8, 4);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Jones', 'Abigail', 'F', '2009-07-20', '13567 Elm Avenue, Springdale, USA', '3948571620', 'None', 'None', 'None', 8, 11);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Wilson', 'Jamie', 'F', '2008-08-30', '89330 Cedar Lane, Lakeside, USA', '5768901234', 'None', 'None', 'None', 8, 2);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Brown', 'Charlotte', 'F', '2006-09-15', '10331 Pine Lane, Meadowbrook, USA', '7463889946', 'None', 'None', 'None', 9, 9);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Martinez', 'Benjamin', 'M', '2007-11-18', '83234 Cedar Court, Riverside, USA', '0927364885', 'Mushroom', 'None', 'None', 9, 6);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Taylor', 'Sophia', 'F', '2007-06-25', '65767 Birch Road, Hillside, USA', '6473829003', 'None', 'None', 'None', 9, 3);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Rodriguez', 'Darlene', 'F', '2011-08-05', '10012 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 10, 10);
+INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
+	VALUES ('Harris', 'Ethan', 'M', '2007-07-02', '30789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10, 5);
 
 
 #Insert data into Camper Groups table
@@ -695,83 +695,77 @@ INSERT INTO staff_session (staff_id, session_id)
 INSERT INTO transactions (transaction_id,transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
 	VALUES (64537, "Deposit", 150.00, "2024-02-13 11:35:56", "Credit", 1, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (69213, "Deposit", 190.67, "2024-02-24 15:12:34", "Credit", 14, 6);
+	VALUES (69213, "Deposit", 190.67, "2024-02-24 15:12:34", "Credit", 2, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (80541, "Deposit", 123.45, "2024-03-01 09:45:21", "Credit", 29, 9);
+	VALUES (80541, "Deposit", 123.45, "2024-03-01 09:45:21", "Debit", 3, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (50736, "Deposit", 87.32, "2024-02-18 14:27:55", "Credit", 11, 3);
+	VALUES (50736, "Tuition", 87.32, "2024-03-18 14:27:55", "Debit", 3, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (92083, "Deposit", 220.15, "2024-03-10 11:20:48", "Credit", 36, 10);
+	VALUES (92083, "Deposit", 220.15, "2024-03-10 11:20:48", "Debit", 5, 10);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (41897, "Deposit", 167.89, "2024-02-21 08:53:17", "Credit", 8, 5);
+	VALUES (41897, "Deposit", 167.89, "2024-02-21 08:53:17", "Credit", 6, 5);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (62384, "Deposit", 96.74, "2024-02-27 17:38:09", "Credit", 21, 8);
+	VALUES (62384, "Deposit", 96.74, "2024-02-27 17:38:09", "Debit", 7, 8);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (31509, "Deposit", 175.28, "2024-02-20 10:05:42", "Credit", 4, 4);
+	VALUES (31509, "Tuition", 175.28, "2024-02-20 10:05:42", "Credit", 8, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (72960, "Deposit", 134.56, "2024-03-03 13:47:29", "Credit", 16, 1);
+	VALUES (72960, "Tuition", 134.56, "2024-03-03 13:47:29", "Credit", 9, 1);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (15820, "Deposit", 201.92, "2024-02-15 12:30:00", "Credit", 1, 7);
+	VALUES (15820, "Tuition", 201.92, "2024-02-15 12:30:00", "Debit", 10, 7);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (43925, "Deposit", 112.84, "2024-02-29 14:16:23", "Credit", 5, 2);
+	VALUES (43925, "Tuition", 112.84, "2024-02-29 14:16:23", "Debit", 11, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (28934, "Deposit", 185.39, "2024-02-23 16:59:08", "Credit", 10, 11);
+	VALUES (28934, "Deposit", 185.39, "2024-02-23 16:59:08", "Debit", 12, 11);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (81752, "Deposit", 140.23, "2024-03-04 09:10:54", "Credit", 23, 6);
+	VALUES (81752, "Tuition", 140.23, "2024-03-04 09:10:54", "Credit", 13, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (56271, "Deposit", 197.61, "2024-02-25 11:26:36", "Credit", 12, 9);
+	VALUES (56271, "Deposit", 197.61, "2024-02-25 11:26:36", "Credit", 14, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (96237, "Deposit", 103.47, "2024-03-12 08:15:12", "Credit", 31, 3);
+	VALUES (37915, "Refund", 209.75, "2024-02-19 14:45:03", "Credit", NULL, NULL);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (37915, "Deposit", 209.75, "2024-02-19 14:45:03", "Credit", 7, 10);
+	VALUES (67148, "Refund", 125.89, "2024-02-28 13:04:17", "Credit", NULL, NULL);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (67148, "Deposit", 125.89, "2024-02-28 13:04:17", "Credit", 19, 5);
+	VALUES (20457, "Deposit", 178.32, "2024-02-16 10:27:58", "Credit", 18, 1);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (20457, "Deposit", 178.32, "2024-02-16 10:27:58", "Credit", 2, 1);
+	VALUES (59382, "Tuition", 130.67, "2024-02-26 09:36:44", "Debit", 19, 8);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (59382, "Deposit", 130.67, "2024-02-26 09:36:44", "Credit", 13, 8);
+	VALUES (84126, "Deposit", 194.45, "2024-03-06 14:58:31", "Credit", 20, 3);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (84126, "Deposit", 194.45, "2024-03-06 14:58:31", "Credit", 26, 3);
+	VALUES (72369, "Deposit", 98.32, "2024-03-02 11:35:26", "Debit", 21, 7);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (72369, "Deposit", 98.32, "2024-03-02 11:35:26", "Credit", 15, 7);
+	VALUES (35782, "Deposit", 203.15, "2024-02-17 12:48:37", "Debit", 22, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (35782, "Deposit", 203.15, "2024-02-17 12:48:37", "Credit", 6, 4);
+	VALUES (98423, "Deposit", 118.49, "2024-03-14 10:20:09", "Credit", 23, 11);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (98423, "Deposit", 118.49, "2024-03-14 10:20:09", "Credit", 33, 11);
+	VALUES (63214, "Deposit", 192.87, "2024-02-29 09:03:50", "Credit", 24, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (63214, "Deposit", 192.87, "2024-02-29 09:03:50", "Credit", 20, 9);
+	VALUES (89571, "Deposit", 115.78, "2024-03-07 15:12:34", "Credit", 25, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (89571, "Deposit", 115.78, "2024-03-07 15:12:34", "Credit", 28, 6);
+	VALUES (54123, "Deposit", 200.63, "2024-02-20 08:59:21", "Credit", 26, 1);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (54123, "Deposit", 200.63, "2024-02-20 08:59:21", "Credit", 9, 1);
+	VALUES (78294, "Deposit", 106.94, "2024-03-01 10:26:17", "Debit", 27, 8);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (78294, "Deposit", 106.94, "2024-03-01 10:26:17", "Credit", 24, 8);
+	VALUES (67284, "Tuition", 129.56, "2024-03-03 11:34:29", "Debit", 29, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (41325, "Deposit", 215.28, "2024-02-22 14:07:42", "Credit", 7, 5);
+	VALUES (24938, "Tuition", 197.92, "2024-02-15 09:45:00", "Credit", 30, 10);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (67284, "Deposit", 129.56, "2024-03-03 11:34:29", "Credit", 18, 2);
+	VALUES (96472, "Deposit", 108.84, "2024-02-28 11:36:23", "Credit", 31, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (24938, "Deposit", 197.92, "2024-02-15 09:45:00", "Credit", 3, 10);
+	VALUES (53147, "Tuition", 191.39, "2024-02-23 08:58:08", "Credit", 31, 7);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (96472, "Deposit", 108.84, "2024-02-28 11:36:23", "Credit", 32, 4);
+	VALUES (81273, "Deposit", 120.23, "2024-03-05 12:10:54", "Credit", 33, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (53147, "Deposit", 191.39, "2024-02-23 08:58:08", "Credit", 11, 7);
+	VALUES (68319, "Deposit", 187.61, "2024-02-24 10:16:36", "Credit", 34, 11);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (81273, "Deposit", 120.23, "2024-03-05 12:10:54", "Credit", 25, 4);
+	VALUES (92468, "Deposit", 101.47, "2024-03-13 07:15:12", "Credit", 35, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (68319, "Deposit", 187.61, "2024-02-24 10:16:36", "Credit", 14, 11);
+	VALUES (39758, "Deposit", 205.75, "2024-02-18 13:45:03", "Credit", 36, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (92468, "Deposit", 101.47, "2024-03-13 07:15:12", "Credit", 30, 2);
+	VALUES (74582, "Tuition", 119.89, "2024-02-27 12:04:17", "Debit", 37, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (39758, "Deposit", 205.75, "2024-02-18 13:45:03", "Credit", 8, 9);
+	VALUES (21347, "Tuition", 180.32, "2024-02-16 09:27:58", "Credit", 38, 3);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (74582, "Deposit", 119.89, "2024-02-27 12:04:17", "Credit", 22, 6);
-INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (21347, "Deposit", 180.32, "2024-02-16 09:27:58", "Credit", 3, 3);
-INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (60492, "Deposit", 135.67, "2024-02-25 08:36:44", "Credit", 15, 10);
-INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (86421, "Deposit", 198.45, "2024-03-08 13:58:31", "Credit", 27, 5);
+	VALUES (86421, "Deposit", 198.45, "2024-03-08 13:58:31", "Debit", 40, 5);
 
 -- Show the tables
 SELECT * FROM activities;
