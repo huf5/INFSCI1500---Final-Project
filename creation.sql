@@ -122,8 +122,8 @@ CREATE TABLE supplies (
     delivery_date DATETIME NOT NULL,
     weight DECIMAL(10,2),
     expiration_date DATE,
-    category VARCHAR(50)
-    -- activity_id INT
+    category VARCHAR(50), 
+    correction_date DATE
 ) ENGINE INNODB;
 
 -- Create transactions table
@@ -143,7 +143,7 @@ CREATE TABLE transactions (
 -- Create transportation table
 DROP TABLE IF EXISTS transportation;
 CREATE TABLE transportation (
-    INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    transportation_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     route VARCHAR(50), 
     vehicle_type VARCHAR(50) NOT NULL,
     capacity INT NOT NULL,
@@ -532,7 +532,7 @@ INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible
 	VALUES ("Piney Forest", "SUV", 6, "N", 13338, 32000.00, "Gasoline", "Good");
 
 
--- Insert infromation into the supplies table
+-- Insert into supplies table
 INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
 	VALUES("Kayak", 17, "Brooklyn Kayak Company", 299.99, "2022-04-22", "2022-05-30", NULL, 30.5, NULL, "Water Sports");
 INSERT INTO supplies (item_name, quantity, supplier, cost, order_date, delivery_date, correction_date, weight, expiration_date, category)
@@ -690,7 +690,88 @@ INSERT INTO staff_session (staff_id, session_id)
 	VALUES (11134, 6), (11134, 8), (11134, 4), (11134, 10), (11134, 3), (11134, 1);
 INSERT INTO staff_session (staff_id, session_id)
 	VALUES (00925, 2), (00925, 5), (00925, 3), (00925, 8), (00925, 7), (00925, 9);
-           
+    
+#insert into transactions table
+INSERT INTO transactions (transaction_id,transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (64537, "Deposit", 150.00, "2024-02-13 11:35:56", "Credit", 1, 2);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (69213, "Deposit", 190.67, "2024-02-24 15:12:34", "Credit", 14, 6);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (80541, "Deposit", 123.45, "2024-03-01 09:45:21", "Credit", 29, 9);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (50736, "Deposit", 87.32, "2024-02-18 14:27:55", "Credit", 11, 3);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (92083, "Deposit", 220.15, "2024-03-10 11:20:48", "Credit", 36, 10);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (41897, "Deposit", 167.89, "2024-02-21 08:53:17", "Credit", 8, 5);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (62384, "Deposit", 96.74, "2024-02-27 17:38:09", "Credit", 21, 8);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (31509, "Deposit", 175.28, "2024-02-20 10:05:42", "Credit", 4, 4);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (72960, "Deposit", 134.56, "2024-03-03 13:47:29", "Credit", 16, 1);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (15820, "Deposit", 201.92, "2024-02-15 12:30:00", "Credit", 1, 7);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (43925, "Deposit", 112.84, "2024-02-29 14:16:23", "Credit", 5, 2);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (28934, "Deposit", 185.39, "2024-02-23 16:59:08", "Credit", 10, 11);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (81752, "Deposit", 140.23, "2024-03-04 09:10:54", "Credit", 23, 6);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (56271, "Deposit", 197.61, "2024-02-25 11:26:36", "Credit", 12, 9);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (96237, "Deposit", 103.47, "2024-03-12 08:15:12", "Credit", 31, 3);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (37915, "Deposit", 209.75, "2024-02-19 14:45:03", "Credit", 7, 10);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (67148, "Deposit", 125.89, "2024-02-28 13:04:17", "Credit", 19, 5);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (20457, "Deposit", 178.32, "2024-02-16 10:27:58", "Credit", 2, 1);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (59382, "Deposit", 130.67, "2024-02-26 09:36:44", "Credit", 13, 8);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (84126, "Deposit", 194.45, "2024-03-06 14:58:31", "Credit", 26, 3);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (72369, "Deposit", 98.32, "2024-03-02 11:35:26", "Credit", 15, 7);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (35782, "Deposit", 203.15, "2024-02-17 12:48:37", "Credit", 6, 4);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (98423, "Deposit", 118.49, "2024-03-14 10:20:09", "Credit", 33, 11);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (63214, "Deposit", 192.87, "2024-02-29 09:03:50", "Credit", 20, 9);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (89571, "Deposit", 115.78, "2024-03-07 15:12:34", "Credit", 28, 6);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (54123, "Deposit", 200.63, "2024-02-20 08:59:21", "Credit", 9, 1);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (78294, "Deposit", 106.94, "2024-03-01 10:26:17", "Credit", 24, 8);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (41325, "Deposit", 215.28, "2024-02-22 14:07:42", "Credit", 7, 5);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (67284, "Deposit", 129.56, "2024-03-03 11:34:29", "Credit", 18, 2);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (24938, "Deposit", 197.92, "2024-02-15 09:45:00", "Credit", 3, 10);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (96472, "Deposit", 108.84, "2024-02-28 11:36:23", "Credit", 32, 4);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (53147, "Deposit", 191.39, "2024-02-23 08:58:08", "Credit", 11, 7);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (81273, "Deposit", 120.23, "2024-03-05 12:10:54", "Credit", 25, 4);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (68319, "Deposit", 187.61, "2024-02-24 10:16:36", "Credit", 14, 11);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (92468, "Deposit", 101.47, "2024-03-13 07:15:12", "Credit", 30, 2);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (39758, "Deposit", 205.75, "2024-02-18 13:45:03", "Credit", 8, 9);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (74582, "Deposit", 119.89, "2024-02-27 12:04:17", "Credit", 22, 6);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (21347, "Deposit", 180.32, "2024-02-16 09:27:58", "Credit", 3, 3);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (60492, "Deposit", 135.67, "2024-02-25 08:36:44", "Credit", 15, 10);
+INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
+	VALUES (86421, "Deposit", 198.45, "2024-03-08 13:58:31", "Credit", 27, 5);
 
 -- Show the tables
 SELECT * FROM activities;
