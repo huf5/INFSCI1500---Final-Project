@@ -12,9 +12,7 @@ CREATE TABLE activities (
     start_time TIME,
     end_time TIME,
     location VARCHAR(100),
-	activity_instructor INT,
-    capacity INT, 
-    CONSTRAINT fk_staff_staff_id_activites_activity_instructor FOREIGN KEY (activity_instructor) REFERENCES staff(staff_id)
+    capacity INT
 ) ENGINE INNODB;
 
 -- Create cabins table
@@ -22,9 +20,7 @@ DROP TABLE IF EXISTS cabins;
 CREATE TABLE cabins (
     cabin_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     cabin_name VARCHAR(50) NOT NULL,
-    capacity INT NOT NULL,
-    cab_group_id INT, 
-    CONSTRAINT fk_camper_groups_group_id_cabins_cab_group_id FOREIGN KEY (cab_group_id) REFERENCES camper_groups(group_id)
+    capacity INT NOT NULL
 ) ENGINE INNODB;
 
 -- Create campers table
@@ -100,7 +96,7 @@ CREATE TABLE sessions (
 -- Create staff table
 DROP TABLE IF EXISTS staff;
 CREATE TABLE staff (
-    staff_id INT PRIMARY KEY NOT NULL,
+    staff_id INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     last_name VARCHAR(50) NOT NULL, 
     first_name VARCHAR(50) NOT NULL,
     position_name VARCHAR(100) NOT NULL,
@@ -166,14 +162,6 @@ CREATE TABLE activity_equipment (
     CONSTRAINT fk_supplies_item_id_activity_equipment_item_id FOREIGN KEY (item_id) REFERENCES supplies(item_id)
 ) ENGINE INNODB;
 
-DROP TABLE IF EXISTS activity_session;
-CREATE TABLE activity_session(
-	s_activity_id INT, 
-    session_id INT, 
-    CONSTRAINT fk_activities_activity_id_activity_session_s_activity_id FOREIGN KEY (s_activity_id) REFERENCES activities(activity_id),
-    CONSTRAINT fk_sessions_session_id_activity_session_session_id FOREIGN KEY (session_id) REFERENCES sessions (session_id)
-)ENGINE INNODB;
-
 DROP TABLE IF EXISTS guardian_children;
 CREATE TABLE guardian_children(
 	guardian_id INT, 
@@ -183,36 +171,76 @@ CREATE TABLE guardian_children(
     CONSTRAINT fk_campers_camper_id_guardian_children_camper_id FOREIGN KEY (camper_id) REFERENCES campers (camper_id)
 )ENGINE INNODB;
 
-DROP TABLE IF EXISTS staff_session;
-CREATE TABLE staff_session(
-	staff_id INT, 
-    session_id INT, 
-    CONSTRAINT fk_staff_staff_id_staff_session_staff_id FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
-    CONSTRAINT fk_sessions_session_id_staff_session_session_id FOREIGN KEY (session_id) REFERENCES sessions(session_id)
+DROP TABLE IF EXISTS staff_activity;
+CREATE TABLE staff_activity(
+	sa_staff_id INT, 
+    sa_activity_id INT,
+    CONSTRAINT fk_staff_staff_id_staff_activity_sa_staff_id FOREIGN KEY (sa_staff_id) REFERENCES staff(staff_id),
+    CONSTRAINT fk_activities_activity_id_staff_activity_activity_id FOREIGN KEY (sa_activity_id) REFERENCES sessions(session_id)
 )ENGINE INNODB;
 
 
 #Insert data into the activities table
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Nature Hike", "7-18", "Guided hike through nearby trails to explore local flora and fauna.", "09:00:00", "12:00:00", "Camp Query Forest", 17263, 20);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Campfire Smores", "5-18", "Gather around a campfire for storytelling and marshmallow roasting.", "8:00:00", "10:00:00", "Camp Query Town Hall", 14577, 200);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Arts and Crafts", "7-18", "Create personalized souvenirs using materials found in nature.", "09:00:00", "12:00:00", "Arts Center", 13562, 35);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Baseball", "7-18", "Play classic baseball team vs team", "02:00:00", "04:00:00", "Baseball Diamond", 13338, 22);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Volleyball", "7-18", "Play classic volleyball team vs team", "05:00:00", "07:00:00", "Bigelow Beach", 12567, 100);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Swimming and Water Sports", "5-18", "Enjoy swimming, water volleyball, or pillow jumping.", "12:00:00", "08:00:00", "Bigelow Lake", 14777, 20);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Photogrpahy Expidition", "5-18", "Capture the beauty of nature through photography sessions led by a professional.", "12:00:00", "03:00:00", "Camp Query Forest", 13364, 20);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor,capacity)
-	VALUES ("Capture the Flag", "5-18", "Join team to fight for the flag.", "05:00:00", "07:00:00", "Camp Query Forest", 90145, 20);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Conoeing and Kayaking", "10-18", "Learn basic paddling techniques and navigate through calm waters.", "11:00:00", "06:00:00", "Bigelow Lake", 33456, 35);
-INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, activity_instructor, capacity)
-	VALUES ("Ropes Course", "7-18", "Use teamwork and survival skills to navigate a 100 foot high rope maze", "09:00:00", "12:00:00", "Camp Query Forest", 11256, 15);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Nature Hike", "7-18", "Guided hike through nearby trails to explore local flora and fauna.", "09:00:00", "12:00:00", "Camp Query Forest", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Campfire Smores", "5-18", "Gather around a campfire for storytelling and marshmallow roasting.", "8:00:00", "10:00:00", "Camp Query Town Hall", 200);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Arts and Crafts", "7-18", "Create personalized souvenirs using materials found in nature.", "09:00:00", "12:00:00", "Arts Center", 35);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Baseball", "7-18", "Play classic baseball team vs team", "02:00:00", "04:00:00", "Baseball Diamond", 22);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Volleyball", "7-18", "Play classic volleyball team vs team", "05:00:00", "07:00:00", "Bigelow Beach", 100);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Swimming and Water Sports", "5-18", "Enjoy swimming, water volleyball, or pillow jumping.", "12:00:00", "08:00:00", "Bigelow Lake", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Photogrpahy Expidition", "5-18", "Capture the beauty of nature through photography sessions led by a professional.", "12:00:00", "03:00:00", "Camp Query Forest", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Capture the Flag", "5-18", "Join team to fight for the flag.", "05:00:00", "07:00:00", "Camp Query Forest", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Conoeing and Kayaking", "10-18", "Learn basic paddling techniques and navigate through calm waters.", "11:00:00", "06:00:00", "Bigelow Lake", 35);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Ropes Course", "7-18", "Use teamwork and survival skills to navigate a 100 foot high rope maze", "09:00:00", "12:00:00", "Camp Query Forest", 15);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Outdoor Movie Night", "5-18", "Enjoy a movie under the stars with popcorn and blankets.", "19:00:00", "22:00:00", "Camp Query Field", 150);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Cooking Competition", "10-18", "Compete in teams to create the most delicious dish judged by professional chefs.", "14:00:00", "17:00:00", "Camp Query Kitchen", 25);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Nature Scavenger Hunt", "7-18", "Search for hidden treasures and learn about the environment along the way.", "10:00:00", "12:00:00", "Camp Query Forest", 30);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Ultimate Frisbee Tournament", "7-18", "Compete in an exciting tournament of Ultimate Frisbee with teams from other camps.", "15:00:00", "18:00:00", "Camp Query Field", 50);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Rock Painting", "5-18", "Express creativity by painting rocks with colorful designs and patterns.", "13:00:00", "15:00:00", "Arts Center", 40);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Nature Journaling", "7-18", "Document observations and thoughts about nature in personalized journals.", "11:00:00", "13:00:00", "Camp Query Forest", 25);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Bird Watching", "10-18", "Spot and identify various bird species with the help of experienced guides.", "08:00:00", "10:00:00", "Camp Query Bird Sanctuary", 15);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Dance Workshop", "7-18", "Learn new dance moves and choreograph routines with professional instructors.", "14:00:00", "16:00:00", " Dance Hall", 30);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Wildlife Safari", "7-18", "Embark on an adventure to observe local wildlife in their natural habitat.", "16:00:00", "18:00:00", "Wilderness Reserve", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Board Games Tournament", "5-18", "Compete in a variety of board games with prizes for the winners.", "13:00:00", "15:00:00", "Recreation Hall", 50);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Archery", "10-18", "Learn the basics of archery and test your skills on the archery range.", "10:00:00", "12:00:00", "Archery Range", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Nature Photography Contest", "7-18", "Capture the best nature photograph to win exciting prizes.", "09:00:00", "11:00:00", "Camp Query Forest", 15);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Drama Workshop", "7-18", "Participate in acting exercises and learn improvisation techniques.", "15:00:00", "17:00:00", "The Old Theater", 25);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Environmental Cleanup", "7-18", "Contribute to the preservation of nature by participating in a campsite cleanup.", "08:00:00", "10:00:00", "Camp Query Campgrounds", 40);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Outdoor Survival Skills", "10-18", "Learn essential survival skills such as building shelters and fire starting.", "14:00:00", "16:00:00", " Wilderness Reserve", 20);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Bike Tour", "10-18", "Explore scenic trails on a guided bike tour through the countryside.", "10:00:00", "12:00:00", "Dead Man's Bike Trail", 15);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Fishing Derby", "7-18", "Compete to catch the biggest fish in the camp's designated fishing spots.", "07:00:00", "09:00:00", "Camp Query Fishing Pond", 30);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Outdoor Leadership Training", "14-18", "Develop leadership skills through outdoor challenges and team-building activities.", "09:00:00", "12:00:00", "The Leadership Center", 10);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Cermaics", "12-18", "Explore various art forms relating to cermic materials.", "14:00:00", "17:00:00", "The Art Studio", 15);
+INSERT INTO activities (activity_name, age_group, activity_desc, start_time, end_time, location, capacity)
+	VALUES ("Cave Exploration", "16-18", "Embark on an exciting journey into the depths of a nearby cave system, discovering hidden chambers and formations.", "12:00:00", "04:00:00", "Darkstone Caverns", 15);
 
 # Insert data into activity_equipment
 INSERT INTO activity_equipment(e_activity_id, item_id)
@@ -230,79 +258,117 @@ INSERT INTO activity_equipment(e_activity_id, item_id)
 INSERT INTO activity_equipment(e_activity_id, item_id)
 	VALUES (5, 7);
 
-    
-# INsert data into activity_session
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(1, 1);
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(1, 2);
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(1, 3);
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(1, 4);
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(1, 5);
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(2, 2);
-INSERT into activity_session(s_activity_id, session_id)
-	VALUES(3, 1);
-
-
 #Insert data into staff table
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (17263, 'Adams', 'James', 'Counselor', '(254) 644-6473' , 'jaddams5@gmail.com', 'Jeremy Adams (254) 644-6179', NULL, 'pescatarian', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (14577, 'Allen', 'Jaci', 'Counselor', '(771) 653-2167' , 'kittyluver92.com', NULL, 'Peanuts', 'Vegetarian', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (13562, 'Jones', 'Helen', 'Activity Coordinator', '(536) 453-6473' , 'jones.helen@gmail.com', 'Jaci Jones (536) 453-6479', NULL, 'Vegetarian', 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (13338, 'Gilly', 'Cynthia', 'Activity Coordinator', '(536) 222-6373' , 'cynthia.gilly@gmail.com', NULL , 'Tree Nuts' , 'Vegan', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (12567, 'Flores', 'Zuri', 'Junior Counselor', '(212) 254-6473' , 'zz42@gmail.com', NULL, 'Peanuts', NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (14777, 'Xu', 'Marisol', 'Counselor', '(223) 256-7584' , 'kittykat66@gmail.com', 'Jeremy Fennel (912) 647-7334', NULL, NULL, 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (13364, 'Brown', 'Jacob', 'Counselor', '(254) 644-9264' , 'jjb5@gmail.com', 'Allen Coyne (254) 622-6273', NULL, 'Kosher', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (90145, 'Patel', 'Alley', 'Counselor', '(814) 224-0293' , 'alleycat@gmail.com', 'Riya Patel (335) 645-7568', 'Wasp Venom' , NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (90146, 'Renick', 'Dylan', 'Junior Counselor', '(335) 222-0917' , 'doggylover@gmail.com', 'Terry Rennick (335) 657-6475' , NULL, 'Vegan', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (33456, 'Lennox', 'Owulatofu', 'Junior Counselor', '(254) 546-0192' , 'lennofu@gmail.com', 'Tanya Lennox (254) 546-7485', NULL, NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (11145, 'Addams', 'Tiara', 'Chef', '(212) 543-9685' , 'tiaraaddams66@gmail.com', 'Diamond Addams (212) 647-6475', NULL, NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (11535, 'Gacy', 'Diya', 'Counselor ', '(212) 536-7568' , 'dg664@gmail.com', 'Nona Gacy (212) 533-7529', 'Blueberries' , 'Halal', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (11256, 'Gacy', 'Maya', 'Counselor', '(212) 536-7580' , 'mg647@gmail.com', 'Nona Gacy (212) 533-7529', 'Peanuts' , 'Halal' , 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (22345, 'Smith', 'Emily', 'Camper Coordinator', '(412) 555-5555', 'emilysmith@example.com', 'John Smith (412) 555-5556', NULL, 'Vegetarian', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (64736, 'Johnson', 'David', 'Counselor', '(412) 555-5557', 'davidjohnson@example.com', 'Jane Johnson (412) 555-5558', NULL, NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (01926, 'Williams', 'Jessica', 'Counselor', '(412) 555-5559', 'jessicawilliams@example.com', 'Jack Williams (412) 555-5560', NULL, 'Gluten-Free', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (84753, 'Brown', 'Michael', 'Chef', '(212) 555-5561', 'michaelbrown@example.com', 'Michelle Brown (212) 555-5562', NULL, NULL, 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (00925, 'Jones', 'Jennifer', 'Junior Lifeguard', '(412) 555-5563', 'jenniferjones@example.com', 'Jason Jones (412) 555-5564', NULL, 'Kosher', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (11134, 'Miller', 'Daniel', 'Counselor', '(812) 555-5565', 'danmiller@example.com', 'Diane Miller (512) 555-5566', NULL, 'Vegan', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (21101, 'Davis', 'Ashley', 'Camp Director', '(758) 555-5567', 'ashleydavis@example.com', 'Adam Davis (755) 555-5568', 'Shellfish', NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (23312, 'Garcia', 'Christopher', 'Junior Counselor', '(162) 555-5569', 'chrisgarcia@example.com', 'Christina Garcia (536) 555-5570', 'Eggs', NULL, 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (19453, 'Rodriguez', 'Megan', 'Kitchen Manager', '(143) 555-5571', 'meganrodriguez@example.com', 'Miguel Rodriguez (758) 555-5572', 'Milk', 'Halal', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (19463, 'Martinez', 'Joseph', 'Janitor', '(756) 555-5573', 'josephmartinez@example.com', 'Julia Martinez (756) 555-5574', 'Soy', 'Kosher', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (10994, 'Hernandez', 'Samantha', 'Janitor', '(645) 555-5575', 'samanthahernandez@example.com', 'Samuel Hernandez (645) 555-5576', NULL, 'Pescatarian', 'N');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (19884, 'Lopez', 'Matthew', 'Janitor', '(354) 555-5577', 'matthewlopez@example.com', 'Maria Lopez (354) 555-5578', 'Pollen', 'Vegan', 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (17264, 'Gonzalez', 'Amanda', 'Janitor', '(647) 555-5579', 'amandagonzalez@example.com', 'Alex Gonzalez (647) 555-5580', NULL, NULL, 'Y');
-INSERT INTO staff (staff_id, last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
-	VALUES (10006, 'Wilson', 'Andrew', 'Maintenance', '(098) 555-5581', 'andrewwilson@example.com', 'Anna Wilson (098) 555-5582', 'Peanuts', NULL, 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Adams', 'James', 'Counselor', '(254) 644-6473' , 'jaddams5@gmail.com', 'Jeremy Adams (254) 644-6179', NULL, 'pescatarian', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Allen', 'Jaci', 'Counselor', '(771) 653-2167' , 'kittyluver92.com', NULL, 'Peanuts', 'Vegetarian', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Jones', 'Helen', 'Activity Coordinator', '(536) 453-6473' , 'jones.helen@gmail.com', 'Jaci Jones (536) 453-6479', NULL, 'Vegetarian', 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Gilly', 'Cynthia', 'Activity Coordinator', '(536) 222-6373' , 'cynthia.gilly@gmail.com', NULL , 'Tree Nuts' , 'Vegan', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Flores', 'Zuri', 'Junior Counselor', '(212) 254-6473' , 'zz42@gmail.com', NULL, 'Peanuts', NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Xu', 'Marisol', 'Counselor', '(223) 256-7584' , 'kittykat66@gmail.com', 'Jeremy Fennel (912) 647-7334', NULL, NULL, 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Brown', 'Jacob', 'Counselor', '(254) 644-9264' , 'jjb5@gmail.com', 'Allen Coyne (254) 622-6273', NULL, 'Kosher', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Patel', 'Alley', 'Counselor', '(814) 224-0293' , 'alleycat@gmail.com', 'Riya Patel (335) 645-7568', 'Wasp Venom' , NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Renick', 'Dylan', 'Junior Counselor', '(335) 222-0917' , 'doggylover@gmail.com', 'Terry Rennick (335) 657-6475' , NULL, 'Vegan', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Lennox', 'Owulatofu', 'Junior Counselor', '(254) 546-0192' , 'lennofu@gmail.com', 'Tanya Lennox (254) 546-7485', NULL, NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Addams', 'Tiara', 'Chef', '(212) 543-9685' , 'tiaraaddams66@gmail.com', 'Diamond Addams (212) 647-6475', NULL, NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Gacy', 'Diya', 'Counselor ', '(212) 536-7568' , 'dg664@gmail.com', 'Nona Gacy (212) 533-7529', 'Blueberries' , 'Halal', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ("Gacy", 'Maya', 'Counselor', '(212) 536-7580' , 'mg647@gmail.com', 'Nona Gacy (212) 533-7529', 'Peanuts' , 'Halal' , 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Smith', 'Emily', 'Camper Coordinator', '(412) 555-5555', 'emilysmith@example.com', 'John Smith (412) 555-5556', NULL, 'Vegetarian', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)	
+	VALUES ('Johnson', 'David', 'Counselor', '(412) 555-5557', 'davidjohnson@example.com', 'Jane Johnson (412) 555-5558', NULL, NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Williams', 'Jessica', 'Counselor', '(412) 555-5559', 'jessicawilliams@example.com', 'Jack Williams (412) 555-5560', NULL, 'Gluten-Free', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Brown', 'Michael', 'Chef', '(212) 555-5561', 'michaelbrown@example.com', 'Michelle Brown (212) 555-5562', NULL, NULL, 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Jones', 'Jennifer', 'Junior Lifeguard', '(412) 555-5563', 'jenniferjones@example.com', 'Jason Jones (412) 555-5564', NULL, 'Kosher', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Miller', 'Daniel', 'Counselor', '(812) 555-5565', 'danmiller@example.com', 'Diane Miller (512) 555-5566', NULL, 'Vegan', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Davis', 'Ashley', 'Camp Director', '(758) 555-5567', 'ashleydavis@example.com', 'Adam Davis (755) 555-5568', 'Shellfish', NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Garcia', 'Christopher', 'Junior Counselor', '(162) 555-5569', 'chrisgarcia@example.com', 'Christina Garcia (536) 555-5570', 'Eggs', NULL, 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Rodriguez', 'Megan', 'Kitchen Manager', '(143) 555-5571', 'meganrodriguez@example.com', 'Miguel Rodriguez (758) 555-5572', 'Milk', 'Halal', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ( 'Martinez', 'Joseph', 'Janitor', '(756) 555-5573', 'josephmartinez@example.com', 'Julia Martinez (756) 555-5574', 'Soy', 'Kosher', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ( 'Hernandez', 'Samantha', 'Janitor', '(645) 555-5575', 'samanthahernandez@example.com', 'Samuel Hernandez (645) 555-5576', NULL, 'Pescatarian', 'N');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Lopez', 'Matthew', 'Janitor', '(354) 555-5577', 'matthewlopez@example.com', 'Maria Lopez (354) 555-5578', 'Pollen', 'Vegan', 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ('Gonzalez', 'Amanda', 'Janitor', '(647) 555-5579', 'amandagonzalez@example.com', 'Alex Gonzalez (647) 555-5580', NULL, NULL, 'Y');
+INSERT INTO staff ( last_name, first_name, position_name, staff_phone_number, staff_email, staff_emergency_contact, staff_allergies, staff_dietary_restrictions, cpr_certification)
+	VALUES ( 'Wilson', 'Andrew', 'Maintenance', '(098) 555-5581', 'andrewwilson@example.com', 'Anna Wilson (098) 555-5582', 'Peanuts', NULL, 'Y');
+    
+#Insert into staff_activity
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id)
+	VALUES (1, 1), (1, 3) ,(1, 5);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id)
+	VALUES (2, 3), (2, 28) ,(2, 27);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (3, 1), (3, 2), (3, 4);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (4, 1), (4, 6), (4, 7);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (5, 2), (5, 8), (5, 9);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id)
+	VALUES (6, 4), (6, 10), (6, 11);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (7, 5), (7, 12), (7, 13);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (8, 6), (8, 14), (8, 15);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (9, 7), (9, 16), (9, 17);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (10, 8), (10, 18), (10, 19);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (11, 9), (11, 20), (11, 21);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (12, 10), (12, 22), (12, 23);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (13, 11), (13, 24), (13, 25);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (14, 12), (14, 26), (14, 27);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (15, 13), (15, 1), (15, 2);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (16, 14), (16, 3), (16, 4);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (17, 15), (17, 5), (17, 6);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (18, 16), (18, 7), (18, 8);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (19, 17), (19, 9), (19, 10);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 	
+	VALUES (20, 18), (20, 11), (20, 12);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (21, 19), (21, 13), (21, 14);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (22, 20), (22, 15), (22, 16);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (23, 21), (23, 17), (23, 18);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (24, 22), (24, 19), (24, 20);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (25, 23), (25, 21), (25, 22);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (26, 24), (26, 23), (26, 24);
+INSERT INTO staff_activity (sa_staff_id, sa_activity_id) 
+	VALUES (27, 25), (27, 25), (27, 26);
 
 #Insert data into the Cabins table
 INSERT INTO cabins (cabin_name, capacity)
@@ -325,11 +391,6 @@ INSERT INTO cabins (cabin_name, capacity)
 	VALUES ('Sycamore', 15);
 INSERT INTO cabins (cabin_name, capacity)
 	VALUES ('Almond', 15);
-INSERT INTO cabins (cabin_name, capacity)
-	VALUES ('Ginko', 20);
-INSERT INTO cabins (cabin_name, capacity)
-	VALUES ('Spruce', 10);
-
 
 #Insert into campers
 INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
@@ -412,7 +473,8 @@ INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency
 	VALUES ('Rodriguez', 'Darlene', 'F', '2011-08-05', '10012 Maple Street, Pleasantville, USA', '1827463758', 'None', 'None', 'None', 10, 10);
 INSERT INTO campers (last_name, first_name, gender, DOB, home_address, emergency_contact, allergies, special_needs, dietary_restrictions, group_assignment, c_session)
 	VALUES ('Harris', 'Ethan', 'M', '2007-07-02', '30789 Oak Drive, Lakeside, USA', '2123456109', 'None', 'None', 'None', 10, 5);
-
+-- Drop the allergies column in campers, there was a mixup in table creation.
+ALTER TABLE campers DROP COLUMN allergies;
 
 #Insert data into Camper Groups table
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
@@ -505,9 +567,9 @@ INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registra
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
 	VALUES ('2024-08-01', '2024-08-15', 'Elementary', 75, '2024-05-15 11:59:00', 'OPEN', 475.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-12-27', '2025-01-07', 'Performing Arts', 50, '2024-10-15 11:59:00', 'REGISTRATION SOON', 575.00);
+	VALUES ('2024-09-01', '2025-09-08', 'Performing Arts', 50, '2024-8-15 11:59:00', 'REGISTRATION SOON', 575.00);
 INSERT INTO sessions (start_date, end_date, theme, enrollment_capacity, registration_deadline, session_status, session_fee)
-	VALUES ('2024-12-27', '2025-01-07', 'Fine Arts', 50, '2024-10-15 11:59:00', 'REGISTRATION SOON', 575.00);
+	VALUES ('2024-09-01', '2025-09-08', 'Fine Arts', 50, '2024-8-15 11:59:00', 'REGISTRATION SOON', 575.00);
 
 -- Transportation
 INSERT INTO transportation (route, vehicle_type, capacity, wheelchair_accessible, driver, mileage, fuel_type, maintenance_status)
@@ -640,132 +702,83 @@ INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, me
 	VALUES (39, 4.9, 72.6, 'A+', NULL, NULL, NULL, 'Dr. Cameron Bell', 3456789012);
 INSERT INTO health_records (camper_id, height, weight, blood_type, allergies, medications, medical_conditions, doctor_name, doctor_contact_number)
 	VALUES (40, 4.8, 70.3, 'AB+', 'Shellfish', NULL, NULL, 'Dr. Kendall Howard', 4567890123);
-
-#Insert into staff_session
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (17263, 6), (17263, 3), (17263, 10), (17263, 1), (17263, 7), (17263, 11);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (14577, 9), (14577, 4), (14577, 2), (14577, 8), (14577, 5), (14577, 1);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (13562, 3), (13562, 8), (13562, 4), (13562, 11), (13562, 9), (13562, 6);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (13338, 10), (13338, 6), (13338, 5), (13338, 2), (13338, 8), (13338, 7);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (12567, 4), (12567, 1), (12567, 7), (12567, 10), (12567, 9), (12567, 11);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES(14777, 1), (14777, 5), (14777, 9), (14777, 6), (14777, 3), (14777, 8);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (13364, 2), (13364, 10), (13364, 8), (13364, 4), (13364, 11), (13364, 5);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (11535, 6), (11535, 8), (11535, 2), (11535, 7), (11535, 10), (11535, 4);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (11256, 3), (11256, 7), (11256, 1), (11256, 9), (11256, 11), (11256, 6);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (22345, 10), (22345, 7), (22345, 6), (22345, 5), (22345, 3), (22345, 2);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (64736, 3), (64736, 9), (64736, 5), (64736, 7), (64736, 2), (64736, 4);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (01926, 4), (01926, 5), (01926, 10), (01926, 7), (01926, 8), (01926, 3);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (84753, 1), (84753, 6), (84753, 4), (84753, 8), (84753, 11), (84753, 10);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (11145, 5), (11145, 1), (11145, 4), (11145, 9), (11145, 2), (11145, 10);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (33456, 1), (33456, 9), (33456, 7), (33456, 11), (33456, 3), (33456, 5);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (90146, 7), (90146, 2), (90146, 10), (90146, 8), (90146, 11), (90146, 1);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (90145, 11), (90145, 3), (90145, 6), (90145, 1), (90145, 10), (90145, 5);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (10994, 8), (10994, 11), (10994, 3), (10994, 5), (10994, 7), (10994, 1);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (19463, 10), (19463, 1), (19463, 9), (19463, 6), (19463, 3), (19463, 5);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (19453, 6), (19453, 4), (19453, 9), (19453, 2), (19453, 11), (19453, 7);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (23312, 11), (23312, 10), (23312, 1), (23312, 6), (23312, 3), (23312, 7);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (21101, 9), (21101, 5), (21101, 6), (21101, 10), (21101, 8), (21101, 7);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (11134, 6), (11134, 8), (11134, 4), (11134, 10), (11134, 3), (11134, 1);
-INSERT INTO staff_session (staff_id, session_id)
-	VALUES (00925, 2), (00925, 5), (00925, 3), (00925, 8), (00925, 7), (00925, 9);
     
 #insert into transactions table
 INSERT INTO transactions (transaction_id,transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
 	VALUES (64537, "Deposit", 150.00, "2024-02-13 11:35:56", "Credit", 1, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (69213, "Deposit", 190.67, "2024-02-24 15:12:34", "Credit", 2, 6);
+	VALUES (69213, "Deposit", 150.00, "2024-02-24 15:12:34", "Credit", 2, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (80541, "Deposit", 123.45, "2024-03-01 09:45:21", "Debit", 3, 9);
+	VALUES (80541, "Deposit", 150.00, "2024-03-01 09:45:21", "Debit", 3, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (50736, "Tuition", 87.32, "2024-03-18 14:27:55", "Debit", 3, 9);
+	VALUES (50736, "Tuition", 350.00, "2024-03-18 14:27:55", "Debit", 3, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (92083, "Deposit", 220.15, "2024-03-10 11:20:48", "Debit", 5, 10);
+	VALUES (92083, "Deposit", 150.00, "2024-03-10 11:20:48", "Debit", 5, 10);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (41897, "Deposit", 167.89, "2024-02-21 08:53:17", "Credit", 6, 5);
+	VALUES (41897, "Deposit", 150.00, "2024-02-21 08:53:17", "Credit", 6, 5);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (62384, "Deposit", 96.74, "2024-02-27 17:38:09", "Debit", 7, 8);
+	VALUES (62384, "Deposit", 150.00, "2024-02-27 17:38:09", "Debit", 7, 8);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (31509, "Tuition", 175.28, "2024-02-20 10:05:42", "Credit", 8, 4);
+	VALUES (31509, "Tuition", 225.00, "2024-02-20 10:05:42", "Credit", 8, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (72960, "Tuition", 134.56, "2024-03-03 13:47:29", "Credit", 9, 1);
+	VALUES (72960, "Tuition", 225.00, "2024-03-03 13:47:29", "Credit", 9, 1);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (15820, "Tuition", 201.92, "2024-02-15 12:30:00", "Debit", 10, 7);
+	VALUES (15820, "Tuition", 700.00, "2024-02-15 12:30:00", "Debit", 10, 7);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (43925, "Tuition", 112.84, "2024-02-29 14:16:23", "Debit", 11, 2);
+	VALUES (43925, "Tuition", 430.00, "2024-02-29 14:16:23", "Debit", 11, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (28934, "Deposit", 185.39, "2024-02-23 16:59:08", "Debit", 12, 11);
+	VALUES (28934, "Deposit", 150.00, "2024-02-23 16:59:08", "Debit", 12, 11);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (81752, "Tuition", 140.23, "2024-03-04 09:10:54", "Credit", 13, 6);
+	VALUES (81752, "Tuition", 1300.00, "2024-03-04 09:10:54", "Credit", 13, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (56271, "Deposit", 197.61, "2024-02-25 11:26:36", "Credit", 14, 9);
+	VALUES (56271, "Deposit", 150.00, "2024-02-25 11:26:36", "Credit", 14, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (37915, "Refund", 209.75, "2024-02-19 14:45:03", "Credit", NULL, NULL);
+	VALUES (37915, "Refund", 150.00, "2024-02-19 14:45:03", "Credit", NULL, NULL);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (67148, "Refund", 125.89, "2024-02-28 13:04:17", "Credit", NULL, NULL);
+	VALUES (67148, "Refund", 1300.00, "2024-02-28 13:04:17", "Credit", NULL, NULL);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (20457, "Deposit", 178.32, "2024-02-16 10:27:58", "Credit", 18, 1);
+	VALUES (20457, "Deposit", 150.00, "2024-02-16 10:27:58", "Credit", 18, 1);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (59382, "Tuition", 130.67, "2024-02-26 09:36:44", "Debit", 19, 8);
+	VALUES (59382, "Tuition", 500.00, "2024-02-26 09:36:44", "Debit", 19, 8);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (84126, "Deposit", 194.45, "2024-03-06 14:58:31", "Credit", 20, 3);
+	VALUES (84126, "Deposit", 150.00, "2024-03-06 14:58:31", "Credit", 20, 3);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (72369, "Deposit", 98.32, "2024-03-02 11:35:26", "Debit", 21, 7);
+	VALUES (72369, "Deposit", 150.00, "2024-03-02 11:35:26", "Debit", 21, 7);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (35782, "Deposit", 203.15, "2024-02-17 12:48:37", "Debit", 22, 4);
+	VALUES (35782, "Deposit", 150.00, "2024-02-17 12:48:37", "Debit", 22, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (98423, "Deposit", 118.49, "2024-03-14 10:20:09", "Credit", 23, 11);
+	VALUES (98423, "Deposit", 150.00, "2024-03-14 10:20:09", "Credit", 23, 11);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (63214, "Deposit", 192.87, "2024-02-29 09:03:50", "Credit", 24, 9);
+	VALUES (63214, "Deposit", 150.00, "2024-02-29 09:03:50", "Credit", 24, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (89571, "Deposit", 115.78, "2024-03-07 15:12:34", "Credit", 25, 6);
+	VALUES (89571, "Deposit", 150.00, "2024-03-07 15:12:34", "Credit", 25, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (54123, "Deposit", 200.63, "2024-02-20 08:59:21", "Credit", 26, 1);
+	VALUES (54123, "Deposit", 150.00, "2024-02-20 08:59:21", "Credit", 26, 1);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (78294, "Deposit", 106.94, "2024-03-01 10:26:17", "Debit", 27, 8);
+	VALUES (78294, "Deposit", 150.00, "2024-03-01 10:26:17", "Debit", 27, 8);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (67284, "Tuition", 129.56, "2024-03-03 11:34:29", "Debit", 29, 2);
+	VALUES (67284, "Tuition", 430.00, "2024-03-03 11:34:29", "Debit", 29, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (24938, "Tuition", 197.92, "2024-02-15 09:45:00", "Credit", 30, 10);
+	VALUES (24938, "Tuition", 575.00, "2024-02-15 09:45:00", "Credit", 30, 10);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (96472, "Deposit", 108.84, "2024-02-28 11:36:23", "Credit", 31, 4);
+	VALUES (96472, "Deposit", 150.00, "2024-02-28 11:36:23", "Credit", 31, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (53147, "Tuition", 191.39, "2024-02-23 08:58:08", "Credit", 31, 7);
+	VALUES (53147, "Tuition", 700.00, "2024-02-23 08:58:08", "Credit", 31, 7);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (81273, "Deposit", 120.23, "2024-03-05 12:10:54", "Credit", 33, 4);
+	VALUES (81273, "Deposit", 150.00, "2024-03-05 12:10:54", "Credit", 33, 4);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (68319, "Deposit", 187.61, "2024-02-24 10:16:36", "Credit", 34, 11);
+	VALUES (68319, "Deposit", 150.00, "2024-02-24 10:16:36", "Credit", 34, 11);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (92468, "Deposit", 101.47, "2024-03-13 07:15:12", "Credit", 35, 2);
+	VALUES (92468, "Deposit", 150.00, "2024-03-13 07:15:12", "Credit", 35, 2);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (39758, "Deposit", 205.75, "2024-02-18 13:45:03", "Credit", 36, 9);
+	VALUES (39758, "Deposit", 150.00, "2024-02-18 13:45:03", "Credit", 36, 9);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (74582, "Tuition", 119.89, "2024-02-27 12:04:17", "Debit", 37, 6);
+	VALUES (74582, "Tuition", 1300.00, "2024-02-27 12:04:17", "Debit", 37, 6);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (21347, "Tuition", 180.32, "2024-02-16 09:27:58", "Credit", 38, 3);
+	VALUES (21347, "Tuition", 350.00, "2024-02-16 09:27:58", "Credit", 38, 3);
 INSERT INTO transactions (transaction_id, transaction_type, amount, transaction_date, payment_type, trans_camper, trans_session)
-	VALUES (86421, "Deposit", 198.45, "2024-03-08 13:58:31", "Debit", 40, 5);
+	VALUES (86421, "Deposit", 150.00, "2024-03-08 13:58:31", "Debit", 40, 5);
+
 
 -- Show the tables
 SELECT * FROM activities;
@@ -781,7 +794,7 @@ SELECT * FROM transactions;
 SELECT * FROM transportation;
 
 SELECT * FROM activity_equipment;
-SELECT * FROM activity_session;
 SELECT * FROM guardian_children;
 SELECT * FROM staff_session;
+SELECT * FROM staff_activity;
 
