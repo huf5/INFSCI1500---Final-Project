@@ -31,7 +31,11 @@ SELECT
 FROM sessions
 ORDER BY session_fee ASC;
 
-# 7 What are the first 5 transactions? 
+# 7 What are the first 5 transactions?
+	SELECT *
+FROM transactions
+ORDER BY transaction_date
+LIMIT 5;
 
 # 8 What supplies go to swimming and water sports and baseball? 
 
