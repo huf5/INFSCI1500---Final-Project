@@ -86,8 +86,10 @@ HAVING staff_count > 2;
 	-- Select and Aggregate
 SELECT AVG(session_fee) AS "Average" FROM sessions;
 
-	
-
-
-
+# 11 - Transaction :)
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+UPDATE campers c SET c.first_name = "Berto" WHERE c.camper_id = 22;
+COMMIT;
+SELECT * FROM campers;
 

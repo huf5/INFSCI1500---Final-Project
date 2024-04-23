@@ -34,8 +34,8 @@ CREATE TABLE campers (
     home_address VARCHAR(100) NOT NULL,
     emergency_contact VARCHAR(15) NOT NULL,
     allergies VARCHAR(200) NOT NULL,
-    special_needs VARCHAR(200) NOT NULL,
-    dietary_restrictions VARCHAR(200) NOT NULL,
+    special_needs VARCHAR(200),
+    dietary_restrictions VARCHAR(200),
     group_assignment INT NOT NULL, 
     c_session INT NOT NULL
 ) ENGINE INNODB;
@@ -492,25 +492,25 @@ ALTER TABLE campers DROP COLUMN allergies;
 
 #Insert data into Camper Groups table
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Red', 1, 17263);
+	VALUES ('Red', 1, 1);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Green', 2, 14577);
+	VALUES ('Green', 2, 2);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Blue', 3, 13562);
+	VALUES ('Blue', 3, 5);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Violet', 4, 13338);
+	VALUES ('Violet', 4, 6);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Silver', 5, 12567);
+	VALUES ('Silver', 5, 7);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Gold', 6, 14777);
+	VALUES ('Gold', 6, 8);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Black', 7, 13364);
+	VALUES ('Black', 7, 9);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Pink', 8, 90145);
+	VALUES ('Pink', 8, 12);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Purple', 9, 90146);
+	VALUES ('Purple', 9, 13);
 INSERT INTO camper_groups (group_name, cg_cabin, cg_staff)
-	VALUES ('Brown', 10, 33456);
+	VALUES ('Brown', 10, 15);
 
 
 #Insert into guardians
@@ -817,6 +817,31 @@ INSERT INTO session_camper(sc_session_id, sc_camper_id)
 INSERT INTO session_camper(sc_session_id, sc_camper_id)
 	VALUES(1, 15);
 
+-- Create VIEW campers, group, and session
+DROP VIEW IF EXISTS camper_assignments;
+CREATE VIEW camper_assignments AS
+SELECT 
+	CONCAT(first_name, " ", last_name) AS "Name",
+    group_assignment AS "Group",
+    c_session AS "Session"
+FROM campers;
+
+-- Create VIEW of staff, position, and their respective cabin and group assignments where applicable
+DROP VIEW IF EXISTS staff_assignments;
+CREATE VIEW staff_assignments AS 
+SELECT
+	CONCAT(s.first_name, " ", s.last_name) AS "Name",
+    s.position_name AS "Position",
+	cg.group_name AS "Group", 
+    c.cabin_name AS "Cabin"
+FROM staff s
+LEFT JOIN camper_groups cg ON s.staff_id = cg.cg_staff
+LEFT JOIN cabins c ON cg.cg_cabin = c.cabin_id;
+
+
+# USE stored procedure
+CALL make_transaction (53647, "Deposit", 150.00, "2024-04-13 11:54:59", "Credit", 4, 1);
+
 -- Show the tables
 SELECT * FROM activities;
 SELECT * FROM cabins;
@@ -827,11 +852,10 @@ SELECT * FROM health_records;
 SELECT * FROM sessions;
 SELECT * FROM supplies;
 SELECT * FROM staff;
-SELECT * FROM transactions;
 SELECT * FROM transportation;
 
 SELECT * FROM activity_equipment;
 SELECT * FROM guardian_children;
 SELECT * FROM staff_activity;
 SELECT * FROM session_camper;
-
+SELECT * FROM transactions;
